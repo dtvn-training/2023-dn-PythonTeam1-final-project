@@ -19,7 +19,7 @@ async def get_users(db: Session = Depends(get_db)):
     return users
 
 
-@router.post("/createuser", status_code=status.HTTP_201_CREATED, response_model=user_schemas.UserOut)
+@router.post("/register", status_code=status.HTTP_201_CREATED)
 async def create_user(user: user_schemas.UserCreate, db: Session = Depends(get_db)):
     # hash pwd
     hashed_password = auth_controller.hash(user.password)
@@ -31,7 +31,7 @@ async def create_user(user: user_schemas.UserCreate, db: Session = Depends(get_d
     return new_user
 
 
-@router.get("/{id}", response_model=user_schemas.UserOut)
+@router.get("/{id}")
 async def get_user(id: int, db: Session = Depends(get_db)):
     user = db.query(user_model.User).filter(user_model.User.id == id).first()
     if not user:

@@ -11,11 +11,13 @@ class UserOut(BaseModel):
         from_attributes = True
 
 
-class UserCreate(BaseModel):
+class UserInfo(BaseModel):
     email: EmailStr
+
+
+class UserCreate(UserInfo):
     password: str
 
 
-class UserLogin(BaseModel):
-    email: EmailStr
+class UserLogin(UserInfo):
     password: str

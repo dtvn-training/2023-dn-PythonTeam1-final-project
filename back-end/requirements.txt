@@ -1,4 +1,10 @@
 sqlalchemy
+pydantic
+pydantic-settings
+python-multipart
+pydantic[email]
+Pylance
+psycopg2
 pymysql
 uvicorn
 fastapi
