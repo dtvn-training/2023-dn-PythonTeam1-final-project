@@ -1,12 +1,14 @@
 from fastapi import FastAPI, Request
 import time
 from fastapi.middleware.cors import CORSMiddleware
-from .models import user_model
+from .models import user_model, role_model, campaign_model, creative_model
 from .connectDB.database import engine
 from .routers import user_router, auth_router
 
-
+role_model.Base.metadata.create_all(bind=engine)
 user_model.Base.metadata.create_all(bind=engine)
+campaign_model.Base.metadata.create_all(bind=engine)
+creative_model.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 

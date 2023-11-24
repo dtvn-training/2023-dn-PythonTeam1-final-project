@@ -54,11 +54,11 @@ def get_current_user(token: str, db: Session):
         id: str = payload.get("user_id")
         if id is None:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                                detail=f"Unknown Id", headers={"WWW-Authenticate": "Bearer"})
+                                detail="Could not find user info", headers={"WWW-Authenticate": "Bearer"})
         token_data = token_schemas.TokenData(user_id=str(id))
     except JWTError:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail=f"Could not validate credentials", headers={"WWW-Authenticate": "Bearer"})
+                            detail="Could not find user info", headers={"WWW-Authenticate": "Bearer"})
     user = db.query(user_model.User).filter(
         user_model.User.id == token_data.user_id).first()
     return user_schemas.UserInfo(email=user.email)

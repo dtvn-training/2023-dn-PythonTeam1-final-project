@@ -34,11 +34,6 @@ async def create_user(user: user_schemas.UserCreate, db: Session = Depends(get_d
     return new_user
 
 
-@router.get("/me")
-async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
-    return auth.get_current_user(token, db)
-
-
 @router.get("/{id}")
 async def get_user(id: int, db: Session = Depends(get_db)):
     user = db.query(user_model.User).filter(user_model.User.id == id).first()
