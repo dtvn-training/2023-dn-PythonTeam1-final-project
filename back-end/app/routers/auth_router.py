@@ -1,8 +1,9 @@
+from fastapi.security import OAuth2PasswordBearer
 from fastapi import APIRouter, Depends, HTTPException, status, Header
 from typing import Annotated
 from sqlalchemy.orm import Session
 from ..schemas import user_schemas
-from ..connectDB.database import get_db
+from ..connectDB.database import get_db, SessionLocal
 from ..models import user_model
 from ..controllers import auth_controller as auth
 
@@ -10,6 +11,7 @@ router = APIRouter(
     prefix="/auth",
     tags=['Authencation']
 )
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
 @router.post("/login")
@@ -29,7 +31,7 @@ async def login(user_credentials: user_schemas.UserLogin, db: Session = Depends(
         )
 
     access_token = auth.create_access_token(
-        data={"user_id": user.id}, db=db)
+        data={"user_id": user.id})
 
     return {"access_token": access_token, "token_type": "bearer"}
 
@@ -44,8 +46,8 @@ async def get_user_by_token(token: str | None = None, db: Session = Depends(get_
 
 
 @router.get("/checkTokenExpired")
-async def is_token_expired(Authorization: Annotated[str | None, Header()] = None):
-    if auth.is_token_expired(Authorization):
+async def is_token_expired(token: str = Depends(oauth2_scheme)):
+    if auth.is_token_expired(token):
         return {
             "msg": "Access token available"
         }

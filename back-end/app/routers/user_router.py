@@ -1,16 +1,19 @@
-from fastapi import APIRouter, status, HTTPException, Depends
+from fastapi import APIRouter, status, HTTPException, Depends, Header
+from fastapi.security import OAuth2PasswordBearer
+from typing import Annotated
 from sqlalchemy.orm import Session
 from typing import List
 
 from ..models import user_model
 from ..schemas import user_schemas
 from ..connectDB.database import get_db
-from ..controllers import auth_controller
+from ..controllers import auth_controller as auth
 
 router = APIRouter(
     prefix="/users",
     tags=['Users']
 )
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
 @router.get("/", response_model=List[user_schemas.UserOut])
@@ -22,13 +25,18 @@ async def get_users(db: Session = Depends(get_db)):
 @router.post("/register", status_code=status.HTTP_201_CREATED)
 async def create_user(user: user_schemas.UserCreate, db: Session = Depends(get_db)):
     # hash pwd
-    hashed_password = auth_controller.hash(user.password)
+    hashed_password = auth.hash(user.password)
     user.password = hashed_password
     new_user = user_model.User(**user.dict())
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
     return new_user
+
+
+@router.get("/me")
+async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+    return auth.get_current_user(token, db)
 
 
 @router.get("/{id}")
