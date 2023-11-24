@@ -1,31 +1,29 @@
 import './App.css';
-
-import DashBoard from './Components/DashBoard'
-import { RequireToken } from './services/AuthService'
-import Login from './Components/Login';
-
+import { Navigate, createPath } from "react-router-dom";
+import DashBoard from './Components/DashBoard/DashBoard'
+import { CheckToken, isAuth } from './services/AuthService'
+import Login from './Pages/LoginPage/Login';
 import React, { } from 'react';
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 function App() {
+
   return (
 
     <BrowserRouter>
-
       <Routes>
         <Route path="/" element={<Login />} />
 
         <Route
           path="/dashboard"
           element={
-            <RequireToken>
+            <CheckToken>
               <DashBoard />
-            </RequireToken>
+            </CheckToken>
           }
         />
 
       </Routes>
-
     </BrowserRouter>
   );
 }
