@@ -27,4 +27,4 @@ class User(Base):
     delete_flag = Column(Boolean, nullable=False, default=False)
 
     role = relationship("Role", back_populates="users")
-    campaign = relationship("Campaign", back_populates="user")
+    campaigns = relationship("Campaign", back_populates="user")
