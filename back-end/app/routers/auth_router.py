@@ -33,15 +33,16 @@ async def login(user_credentials: user_schemas.UserLogin, db: Session = Depends(
         )
 
     access_token = auth.create_access_token(
-        data={"user_id": user.id})
+        data={"user_id": user.user_id})
 
     return {"msg": "Login successfully", "access_token": access_token, "token_type": "bearer"}
 
 
 @router.get("/user")
 async def get_user_by_token(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
-    user_data = auth.get_current_user(token, db)
-    return {"msg": "User found", "data": user_data}
+    user_full_data = auth.get_current_user(token, db)
+    user_data_response = user_schemas.UserInfo(user_full_data.email)
+    return {"msg": "User found", "data": user_data_response}
 
 
 @router.get("/checkTokenExpired")

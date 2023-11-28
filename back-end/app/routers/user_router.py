@@ -36,7 +36,8 @@ async def create_user(user: user_schemas.UserCreate, db: Session = Depends(get_d
 
 @router.get("/{id}")
 async def get_user(id: int, db: Session = Depends(get_db)):
-    user = db.query(user_model.User).filter(user_model.User.id == id).first()
+    user = db.query(user_model.User).filter(
+        user_model.User.user_id == id).first()
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"User with id: {id} dose not exist!")
