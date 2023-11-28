@@ -27,8 +27,8 @@ datetime format: yyyy-MM-dd hh:mm
 {
   "campaign_name": str,
   "status": boolean,
-  "start_time": datetime,
-  "end_time" : datetime,
+  "start_date": datetime,
+  "end_date" : datetime,
   "budget": int,
   "bid_amount": int,
   "creative": {
@@ -71,7 +71,7 @@ datetime format: yyyy-MM-dd hh:mm
 </details>
 
 <details>
-  <summary> Read a campaign </summary>
+  <summary> Get a campaign </summary>
 
 <b>- Endpoint:</b> /api/campaigns/[campaign_id]
 <br>
@@ -88,11 +88,13 @@ datetime format: yyyy-MM-dd hh:mm
 
 ```python
 {
+  "campaign_id" : str,
   "campaign_name" : str,
   "status": bool,
   "used_amount" : int,
   "usage_rate" : float,
-  "budget" : int,
+  "budget": int,
+  "bid_amount": int,
   "start_date" : datetime,
   "end_date": datetime,
   "creative": [{
@@ -118,14 +120,54 @@ datetime format: yyyy-MM-dd hh:mm
 
 ```python
 {
-  "detail" : "Invalid campaign id"
+  "detail" : "Not Found Campaign"
 }
 ```
 
 </details>
 
 <details>
-  <summary> Read a page of campaigns </summary>
+  <summary> Get the number of campaign pages </summary>
+
+<b>- Endpoint:</b> /api/campaigns/pages
+<br>
+<b>- Method:</b> [GET]
+<br>
+<b>- Request:</b>
+<br>
+<i>+ Token:</i> Bearer
+<br>
+<b>- Response:</b>
+<br>
+<i>+ Status code: 200</i>
+<br>
+
+```python
+{
+  "the_number_of_pages" : int
+}
+```
+
+<i>+ Status code: 401</i>
+
+```python
+{
+  "detail" : "Unauthorized user"
+}
+```
+
+<i>+ Status code: 404</i>
+
+```python
+{
+  "detail" : "Not Found any pages"
+}
+```
+
+</details>
+
+<details>
+  <summary> Get a page of campaigns </summary>
 
 <b>- Endpoint:</b> /api/campaigns/
 <br>
@@ -152,11 +194,13 @@ datetime format: yyyy-MM-dd hh:mm
 {
   "campaigns" : [
   {
+    "campaign_id" : str,
     "campaign_name" : str,
     "status": bool,
     "used_amount" : int,
     "usage_rate" : float,
-    "budget" : int,
+    "budget": int,
+    "bid_amount": int,
     "start_date" : datetime,
     "end_date": datetime,
     "creative": [{
@@ -164,10 +208,10 @@ datetime format: yyyy-MM-dd hh:mm
       "description": str,
       "creative_review": str,
       "url": str,
-    }
-    ...
-    ]
-  },
+  }
+  ...
+  ]
+},
   ...
   ]
 }
@@ -185,7 +229,7 @@ datetime format: yyyy-MM-dd hh:mm
 
 ```python
 {
-  "detail" : "Invalid the number of pages"
+  "detail" : "Not Found any Campaigns"
 }
 ```
 
@@ -212,9 +256,9 @@ datetime format: yyyy-MM-dd hh:mm
   "status": boolean,
   "budget": int,
   "bid_amount": int,
-  "used_amount": int,
   "start_date": datetime,
   "end_date": datetime,
+  "update_at": datetime,
   "creative": {
     "title" : str,
     "description": str,
@@ -252,10 +296,18 @@ datetime format: yyyy-MM-dd hh:mm
 }
 ```
 
+<i>+ Status code: 404</i>
+
+```python
+{
+  "detail" : "Not found campaign"
+}
+```
+
 </details>
 
 <details>
-  <summary> Delete a campaign </summary>
+  <summary> Delete campaigns </summary>
 
 <b>- Endpoint:</b> /api/campaigns/
 <br>
