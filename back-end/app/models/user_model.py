@@ -9,7 +9,8 @@ from ..connectDB.database import Base
 class User(Base):
     __tablename__ = "users"
 
-    user_id = Column(String(36), primary_key=True, default=uuid.uuid4())
+    user_id = Column(String(36), primary_key=True,
+                     default=lambda: str(uuid.uuid4()))
     email = Column(String(100), nullable=False, unique=True)
     password = Column(String(256), nullable=False)
     first_name = Column(String(100), nullable=False)

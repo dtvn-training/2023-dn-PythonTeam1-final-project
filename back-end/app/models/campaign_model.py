@@ -9,7 +9,8 @@ from ..connectDB.database import Base
 class Campaign(Base):
     __tablename__ = "campaigns"
 
-    campaign_id = Column(String(36), primary_key=True, default=uuid.uuid4())
+    campaign_id = Column(String(36), primary_key=True,
+                         default=lambda: str(uuid.uuid4()))
     name = Column(String(200), nullable=False)
     status = Column(Boolean, default=False)
     budget = Column(Integer, nullable=False)

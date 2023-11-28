@@ -9,7 +9,8 @@ from ..connectDB.database import Base
 class Creative(Base):
     __tablename__ = "creatives"
 
-    creative_id = Column(String(36), primary_key=True, default=uuid.uuid4())
+    creative_id = Column(String(36), primary_key=True,
+                         default=lambda: str(uuid.uuid4()))
     title = Column(String(200), nullable=False)
     description = Column(String(500))
     img_preview = Column(String(200), nullable=False)
