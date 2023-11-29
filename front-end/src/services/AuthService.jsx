@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../const/axios";
 import React from "react";
 import { Navigate, useLocation } from "react-router-dom";
 
@@ -20,7 +20,8 @@ export function isAuth() {
   };
 
   axios
-    .get("http://127.0.0.1:8000/auth/checkTokenExpired", config)
+    // .get("http://127.0.0.1:8000/auth/checkTokenExpired", config)
+    .get('auth/checkTokenExpired', config)
     .then((response) => {
       if (response.status === 200) {
         return true;
