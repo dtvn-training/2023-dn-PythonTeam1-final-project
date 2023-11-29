@@ -1,0 +1,104 @@
+* {
+    margin: 0;
+    box-sizing: border-box;
+}
+
+
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+    margin-top: 25vh;
+    width: 25em;
+    height: 27em;
+    background: #fff;
+    border-radius: 5px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.header {
+    display: relative;
+    text-align: center;
+    width: 100%;
+    margin-top: 2em;
+}
+
+.text {
+    color: #000;
+    font-size: 36px;
+    font-weight: 700;
+}
+
+.login-input {
+    display: relative;
+    margin-top: 1.3em;
+    height: 4em;
+    width: 80%;
+}
+
+.login-input input {
+    border: 0.15em solid #6A7A8F;
+    height: 85%;
+    width: 100%;
+    border-radius: 0.25em;
+    text-align: left;
+    padding: 1.5em
+}
+
+.login-input span {
+    margin-top: 20px;
+    font-size: 13px;
+    color: red;
+}
+
+.login-input span .show {
+    display: none;
+}
+
+.login-input span .hide {
+    display: block;
+}
+
+.login-btn {
+    border: none;
+    margin-top: 2em;
+    border-radius: 0.25em;
+    width: 80%;
+    height: 4em;
+    background-color: #468FAF;
+    color: white;
+    cursor: pointer;
+}
+
+.alt-login {
+    margin-top: 1.5em;
+    width: 80%;
+    height: 3em;
+    display: flex;
+    justify-content: space-between;
+}
+
+.alt-login div {
+    width: 45%;
+    height: 90%;
+    border-radius: 0.25em;
+    background-position: center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    justify-content: space-around;
+}
+
+.google {
+    background-color: #EA4336;
+    color: white;
+}
+
+.facebook {
+    background-color: #4795FF;
+    color: white;
+}
