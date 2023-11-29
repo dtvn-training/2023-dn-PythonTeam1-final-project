@@ -1,4 +1,4 @@
-import axios from "../const/axios";
+import buildAPI from "../const/buildAPI";
 import React from "react";
 import { Navigate, useLocation } from "react-router-dom";
 
@@ -6,22 +6,18 @@ export const setToken = (token) => {
   localStorage.setItem("access_token", token);
 };
 
-export const fetchToken = () => {
+export const getToken = () => {
   return localStorage.getItem("access_token");
 };
 
 export function isAuth() {
-  const token = fetchToken();
+  const token = getToken();
   if (!token) {
     return false;
   }
-  const config = {
-    headers: { Authorization: `Bearer ${token}` },
-  };
 
-  axios
-    // .get("http://127.0.0.1:8000/auth/checkTokenExpired", config)
-    .get('auth/checkTokenExpired', config)
+  buildAPI
+    .get("auth/checkTokenExpired")
     .then((response) => {
       if (response.status === 200) {
         return true;
@@ -41,7 +37,7 @@ export function isAuth() {
 }
 
 export function CheckToken({ children }) {
-  let auth = fetchToken();
+  let auth = getToken();
   let location = useLocation();
   const navigate_login = <Navigate to="/" state={{ from: location }} />;
   const navigate_current = children;
