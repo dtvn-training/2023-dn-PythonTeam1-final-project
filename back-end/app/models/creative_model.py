@@ -13,8 +13,8 @@ class Creative(Base):
                          default=lambda: str(uuid.uuid4()))
     title = Column(String(200), nullable=False)
     description = Column(String(500))
-    img_preview = Column(String(200), nullable=False)
-
+    img_preview = Column(String(200))
+    url = Column(String(200), nullable=False)
     campaign_id = Column(String(36), ForeignKey(
         'campaigns.campaign_id'), nullable=False)
 

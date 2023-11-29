@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from typing import List
-from datetime import datetime
+from ..schemas.creative_schemas import CreativeInfo
 
 
 class CampaignInfo(BaseModel):
@@ -10,6 +10,7 @@ class CampaignInfo(BaseModel):
     bid_amount: int
     start_date: str
     end_date: str
+    creative: CreativeInfo
 
 
 class CampaignUpdate(CampaignInfo):

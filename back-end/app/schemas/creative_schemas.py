@@ -4,10 +4,6 @@ from datetime import datetime
 
 class CreativeInfo(BaseModel):
     title: str
-    description: bool
-    creative_review: str
+    description: str
+    img_preview: str
     url: str
-
-
-class CreativeRead(BaseModel):
-    uuid: str
