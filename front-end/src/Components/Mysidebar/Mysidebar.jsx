@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { Box, Typography, IconButton, Avatar } from "@mui/material";
+import { Box, IconButton, Avatar } from "@mui/material";
 import { Sidebar, Menu, MenuItem } from "react-pro-sidebar";
 import { Link, useLocation } from "react-router-dom";
 import ViewSidebarOutlinedIcon from '@mui/icons-material/ViewSidebarOutlined';
 // import DashboardCustomizeOutlinedIcon from '@mui/icons-material/DashboardCustomizeOutlined';
 import CampaignOutlinedIcon from '@mui/icons-material/CampaignOutlined';
 import SupervisorAccountOutlinedIcon from '@mui/icons-material/SupervisorAccountOutlined';
+import './mysidebar.scss';
 
 // MENU ITEM FORM
 const Item = ({ title, to, icon, setSelected }) => {
@@ -13,25 +14,15 @@ const Item = ({ title, to, icon, setSelected }) => {
     const isActive = location.pathname === to;
 
     return (
-        <Link to={to} style={{ textDecoration: "none", color: "white" }}>
+        <Link to={to} className="customLink">
             <MenuItem
-                active={isActive}
-                style={{
-                    color: isActive ? "black" : "white",
-                    height: "6rem",
-                    backgroundColor: isActive ? "white" : "transparent",
-                    borderBottom: "1px solid white",
-                    transition: "color 0.5s, background-color 0.4s",
-                }}
+                className={`customMenuItem ${isActive ? 'active' : ''}`}
                 onClick={() => setSelected(title)}
                 icon={icon}
             >
-                <Typography
-                    variant="body1"
-                    fontSize="1.6rem"
-                >
+                <span>
                     {title}
-                </Typography>
+                </span>
             </MenuItem>
         </Link>
     );
@@ -54,47 +45,30 @@ const Mysidebar = () => {
                 <MenuItem
                     onClick={() => setIsCollapsed(!isCollapsed)}
                     icon={isCollapsed ? <ViewSidebarOutlinedIcon style={{ fontSize: '2.6rem' }} /> : undefined}
-                    style={{
-                        color: "white",
-                        backgroundColor: "#468faf",
-                        borderBottom: ".1rem solid white",
-                        height: "6rem"
-                    }}
+                    className="customMenuItemSidebar"
                 >
                     {!isCollapsed && (
-                        <Box
-                            display="flex"
-                            justifyContent="center"
-                            alignItems="center"
-                        >
+                        <Box className="logoAndMenu disable">
                             <IconButton
                                 onClick={() => setIsCollapsed(!isCollapsed)}
-                                sx={{ color: "white" }}
                             >
-                                <ViewSidebarOutlinedIcon style={{ fontSize: '2.6rem' }} />
+                                <ViewSidebarOutlinedIcon className="logoAndMenu icon" />
                             </IconButton>
-                            <Typography
-                                variant="body1"
-                                fontSize="1.6rem"
-                            >
+                            <span>
                                 Toggle sidebar
-                            </Typography>
+                            </span>
                         </Box>
                     )}
                 </MenuItem>
 
                 {/* SHOW OR CLOSE USER IMAGE */}
                 {!isCollapsed && (
-                    <Box
-                        p="3rem"
-                        style={{
-                            borderBottom: ".1rem solid white",
-                        }}>
-                        <Box display="flex" justifyContent="center" alignItems="center" mb="1rem">
+                    <Box className="imageUser">
+                        <Box className="image">
                             <Avatar alt="user-image" src="../assets/Images/user.jpg" sx={{ width: "20rem", height: "20rem" }} />
                         </Box>
                         <Box textAlign="center">
-                            <Typography
+                            <sp
                                 variant="body1"
                                 color="white"
                                 fontSize="2.2rem"
@@ -103,7 +77,7 @@ const Mysidebar = () => {
                                 }}
                             >
                                 User Name
-                            </Typography>
+                            </sp>
                         </Box>
                     </Box>
                 )}

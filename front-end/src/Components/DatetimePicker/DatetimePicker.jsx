@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { Box, Typography } from '@mui/material'
+import { Box } from '@mui/material'
 import * as React from 'react';
 import TextField from '@mui/material/TextField';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
+import './datetimepicker.scss';
 
 const DatetimePicker = () => {
     const [startDate, setStartDate] = useState(null);
@@ -19,21 +20,12 @@ const DatetimePicker = () => {
     };
 
     return (
-        <Box display="flex" justifyContent="space-between">
-            <Box Box
-                display="flex"
-                alignItems="center"
-            >
+        <Box className="datetime-container">
+            <Box className="dateime-component">
                 <LocalizationProvider dateAdapter={AdapterDayjs} >
-                    <Typography variant='h5' color='#000' backgroundColor='#fff' fontWeight='700'>Start time:</Typography>
+                    <span >Start time:</span>
                     <DatePicker
-                        sx={{
-                            ml: 1,
-                            width: "18rem",
-                            "& input": {
-                                fontSize: "1.2rem",
-                            },
-                        }}
+                        className="customDatePicker"
                         value={startDate}
                         onChange={handleStartDateChange}
                         renderInput={(params) => <TextField {...params} />}
@@ -42,24 +34,11 @@ const DatetimePicker = () => {
                 </LocalizationProvider>
             </Box >
 
-            <Box
-                display="flex"
-                alignItems="center"
-                sx={{
-                    ml: 2,
-                    mr: 4,
-                }}
-            >
+            <Box className="dateime-component">
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <Typography variant='h5' color='#000' backgroundColor='#fff' fontWeight='700'>End time:</Typography>
+                    <span>End time:</span>
                     <DatePicker
-                        sx={{
-                            ml: 1,
-                            width: "18rem",
-                            "& input": {
-                                fontSize: "1.2rem",
-                            },
-                        }}
+                        className="customDatePicker"
                         value={endDate}
                         onChange={handleEndDateChange}
                         renderInput={(params) => <TextField {...params} />}
