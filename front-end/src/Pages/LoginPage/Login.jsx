@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import "./Login.scss";
 
-import axios from "axios";
+import buildAPI from "../../const/buildAPI";
 import { useNavigate } from "react-router-dom";
 import { setToken } from "../../services/AuthService";
+import "./Login.scss";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -37,15 +37,15 @@ export default function Login() {
     } else setMessagePassword("");
 
     if (flag) {
-      axios
-        .post("http://127.0.0.1:8000/auth/login", {
+      buildAPI
+        .post("/auth/login", {
           email: email,
           password: password,
         })
         .then(function (response) {
           if (response.data.access_token) {
             setToken(response.data.access_token);
-            navigate("/dashboard");
+            navigate("/campaign");
           }
         })
         .catch(function (error) {

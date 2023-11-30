@@ -3,8 +3,8 @@ import { Box, Typography, IconButton, Avatar } from "@mui/material";
 import { Sidebar, Menu, MenuItem } from "react-pro-sidebar";
 import { Link, useLocation } from "react-router-dom";
 import ViewSidebarOutlinedIcon from '@mui/icons-material/ViewSidebarOutlined';
-import DashboardCustomizeOutlinedIcon from '@mui/icons-material/DashboardCustomizeOutlined';
-// import CampaignOutlinedIcon from '@mui/icons-material/CampaignOutlined';
+// import DashboardCustomizeOutlinedIcon from '@mui/icons-material/DashboardCustomizeOutlined';
+import CampaignOutlinedIcon from '@mui/icons-material/CampaignOutlined';
 import SupervisorAccountOutlinedIcon from '@mui/icons-material/SupervisorAccountOutlined';
 
 // MENU ITEM FORM
@@ -110,21 +110,21 @@ const Mysidebar = () => {
 
                 {/* MENU ITEM LINK */}
                 <Box>
-                    <Item
+                    {/* <Item
                         title="Dashboard"
                         to="/"
                         icon={<DashboardCustomizeOutlinedIcon style={{ fontSize: '2.6rem' }} />}
                         selected={selected}
                         setSelected={setSelected}
-                    />
+                    /> */}
 
-                    {/* <Item
+                    <Item
                         title="Campaign"
                         to="/campaign"
                         icon={<CampaignOutlinedIcon style={{ fontSize: '2.6rem' }} />}
                         selected={selected}
                         setSelected={setSelected}
-                    /> */}
+                    />
 
                     <Item
                         title="Account"
