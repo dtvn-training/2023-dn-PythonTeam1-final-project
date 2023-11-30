@@ -1,0 +1,24 @@
+.datetime-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.dateime-component {
+    display: flex;
+    align-items: center;
+    width: 30rem;
+}
+
+.dateime-component span {
+    color: #000;
+    font-weight: bold;
+    width: 8rem;
+}
+
+.customDatePicker {
+    width: 20rem;
+
+    & input {
+        font-size: 1.2rem;
+    }
+}
