@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Login.scss";
-
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { setToken } from "../../services/AuthService";
+import { setToken, validateToken } from "../../services/AuthService";
+import { useDispatch } from "react-redux";
+import { dispatchLogin, dispatchLogout } from "../../redux/actions/authAction";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -12,6 +13,7 @@ export default function Login() {
   const [messageEmail, setMessageEmail] = useState("");
   const [messagePassword, setMessagePassword] = useState("");
 
+  const dispatch = useDispatch();
   const handleEmailOnChange = (e) => {
     setEmail(e.target.value);
   };
@@ -44,8 +46,11 @@ export default function Login() {
         })
         .then(function (response) {
           if (response.data.access_token) {
+            dispatch(dispatchLogin());
+
+            // console.log(dispatchLogin);
             setToken(response.data.access_token);
-            navigate("/dashboard");
+            navigate("/");
           }
         })
         .catch(function (error) {
