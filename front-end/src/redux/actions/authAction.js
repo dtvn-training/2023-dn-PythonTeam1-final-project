@@ -14,14 +14,13 @@ export const dispatchLogout = () => {
 };
 
 export function validateToken() {
-    return async function validateTokenThunk(dispatch) {
-        try {
-            const response = await buildAPI.get("auth/checkTokenExpired")
+    return (dispatch) => {
+        return buildAPI.get("auth/checkTokenExpired").then(response => {
             if (response.status === 200)
                 dispatch(dispatchLogin())
-        } catch {
+        }).catch(() => {
             dispatch(dispatchLogout())
-        }
-
+        })
     }
 }
+
