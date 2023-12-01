@@ -12,7 +12,6 @@ function App() {
   const isLogged = useSelector((state) => state.auth.isLogged);
   const dispatch = useDispatch()
 
-
   useEffect(() => {
     dispatch(validateToken())
   }, [])
