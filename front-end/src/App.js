@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 import View from './Pages/View/View'
 // import Dashboard from './Pages/DashBoard/DashBoard';
-import Account from './Pages/Account/Account';
+import Account from './Pages/Account/Account.jsx';
 import Campaign from './Pages/Campaign/Campaign';
 
 function App() {
