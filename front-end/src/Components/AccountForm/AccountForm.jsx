@@ -9,12 +9,8 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { Formik } from "formik";
 import * as yup from "yup";
 
-const AccountForm = ({ title, onClose }) => {
+const AccountForm = ({ title, onClose, onSubmit }) => {
     const isNonMobile = useMediaQuery("(min-width:600px)");
-
-    const handleFormSubmit = (values) => {
-        console.log(values);
-    };
 
     const handleClose = () => {
         onClose();
@@ -32,16 +28,16 @@ const AccountForm = ({ title, onClose }) => {
 
     const currencies = [
         {
-            value: 'ADMIN',
+            value: '1',
             label: 'ADMIN',
         },
         {
-            value: 'DAC',
-            label: 'DAC',
+            value: '2',
+            label: 'AGENCY',
         },
         {
-            value: 'ADVERTIER',
-            label: 'ADVERTIER',
+            value: '3',
+            label: 'ADVERTISER',
         },
     ];
 
@@ -91,7 +87,10 @@ const AccountForm = ({ title, onClose }) => {
 
                 <Box>
                     <Formik
-                        onSubmit={handleFormSubmit}
+                        onSubmit={(values, { setSubmitting }) => {
+                            onSubmit(values);
+                            setSubmitting(false);
+                        }}
                         initialValues={initialValues}
                         validationSchema={checkoutSchema}
                     >
@@ -181,10 +180,10 @@ const AccountForm = ({ title, onClose }) => {
                                                     type="text"
                                                     onBlur={handleBlur}
                                                     onChange={handleChange}
-                                                    value={values.firstName}
-                                                    name="firstName"
-                                                    error={!!touched.firstName && !!errors.firstName}
-                                                    helperText={touched.firstName && errors.firstName}
+                                                    value={values.first_name}
+                                                    name="first_name"
+                                                    error={!!touched.first_name && !!errors.first_name}
+                                                    helperText={touched.first_name && errors.first_name}
                                                     inputProps={{
                                                         style: {
                                                             fontSize: "1.8rem",
@@ -219,10 +218,10 @@ const AccountForm = ({ title, onClose }) => {
                                                     type="text"
                                                     onBlur={handleBlur}
                                                     onChange={handleChange}
-                                                    value={values.lastName}
-                                                    name="lastName"
-                                                    error={!!touched.lastName && !!errors.lastName}
-                                                    helperText={touched.lastName && errors.lastName}
+                                                    value={values.last_name}
+                                                    name="last_name"
+                                                    error={!!touched.last_name && !!errors.last_name}
+                                                    helperText={touched.last_name && errors.last_name}
                                                     inputProps={{
                                                         style: {
                                                             fontSize: "1.8rem",
@@ -256,10 +255,10 @@ const AccountForm = ({ title, onClose }) => {
                                                     select
                                                     onBlur={handleBlur}
                                                     onChange={handleChange}
-                                                    value={values.role}
-                                                    name="role"
-                                                    error={!!touched.role && !!errors.role}
-                                                    helperText={touched.role && errors.role}
+                                                    value={values.role_id}
+                                                    name="role_id"
+                                                    error={!!touched.role_id && !!errors.role_id}
+                                                    helperText={touched.role_id && errors.role_id}
                                                     SelectProps={{
                                                         native: true,
                                                         style: {
@@ -414,10 +413,10 @@ const AccountForm = ({ title, onClose }) => {
                                                     type="password"
                                                     onBlur={handleBlur}
                                                     onChange={handleChange}
-                                                    value={values.passwordConfirm}
-                                                    name="passwordConfirm"
-                                                    error={!!touched.passwordConfirm && !!errors.passwordConfirm}
-                                                    helperText={touched.passwordConfirm && errors.passwordConfirm}
+                                                    value={values.confirm_password}
+                                                    name="confirm_password"
+                                                    error={!!touched.confirm_password && !!errors.confirm_password}
+                                                    helperText={touched.confirm_password && errors.confirm_password}
                                                     inputProps={{
                                                         style: {
                                                             fontSize: "1.8rem",
@@ -468,9 +467,9 @@ const phoneRegExp =
 
 const checkoutSchema = yup.object().shape({
     email: yup.string().email("invalid email").required("required"),
-    firstName: yup.string().required("required"),
-    lastName: yup.string().required("required"),
-    role: yup.string().required("Please select user role"),
+    first_name: yup.string().required("required"),
+    last_name: yup.string().required("required"),
+    role_id: yup.string().required("Please select user role"),
     address: yup.string().required("required"),
     phone: yup
         .string()
@@ -479,18 +478,18 @@ const checkoutSchema = yup.object().shape({
     password: yup.string()
         .required('No password provided.')
         .min(8, 'Password is too short - should be 8 chars minimum.'),
-    passwordConfirm: yup.string().required('Please retype your password.').oneOf([yup.ref('password')], 'Your passwords do not match.')
+    confirm_password: yup.string().required('Please retype your password.').oneOf([yup.ref('password')], 'Your passwords do not match.')
 });
 
 const initialValues = {
     email: "",
-    firstName: "",
-    lastName: "",
-    role: "",
+    first_name: "",
+    last_name: "",
+    role_id: "",
     address: "",
     phone: "",
     password: "",
-    passwordConfirm: ""
+    confirm_password: ""
 };
 
 export default AccountForm;
