@@ -22,18 +22,16 @@ const Account = () => {
         setSelectedRow(row);
         setIsEditFormVisible(true);
     };
+    const handleCloseEditForm = () => {
+        setIsEditFormVisible(false);
+        setSelectedAccount(null);
+    };
     const handleOpenCreateForm = () => {
         setIsCreateFormVisible(true);
         setSelectedAccount(null);
     };
-
     const handleCloseCreateForm = () => {
         setIsCreateFormVisible(false);
-    };
-
-    const handleCloseEditForm = () => {
-        setIsEditFormVisible(false);
-        setSelectedAccount(null);
     };
 
     const convertRoleIdToString = (roleId) => {
@@ -246,7 +244,21 @@ const Account = () => {
                     {isCreateFormVisible && (
                         <AccountForm title={'Create Account'} onClose={handleCloseCreateForm} onSubmit={createAccount} />
                     )}
-
+                    {isEditFormVisible && selectedRow && (
+                        <AccountForm
+                            title={'Edit Account'}
+                            onClose={handleCloseEditForm}
+                            onSubmit={(userData) => handleEditAccount(selectedRow, userData)}
+                            initialValues={{
+                                first_name: selectedRow.first_name,
+                                last_name: selectedRow.last_name,
+                                email: selectedRow.email,
+                                address: selectedRow.address,
+                                phone: selectedRow.phone,
+                                role_id: selectedRow.role_id,
+                            }}
+                        />
+                    )}
                     <ToastContainer />
                 </Box>
             </HeaderContainer>
@@ -257,7 +269,6 @@ const Account = () => {
                     <DataGrid
                         rows={accountData}
                         columns={columns}
-                        onRowClick={(params) => handleOpenEditForm(params.row)}
                         initialState={{
                             pagination: {
                                 paginationModel: {
