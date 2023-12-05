@@ -9,7 +9,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { Formik } from "formik";
 import * as yup from "yup";
 
-const AccountForm = ({ title, onClose, onSubmit }) => {
+const AccountForm = ({ title, onClose, onSubmit, initialData }) => {
     const isNonMobile = useMediaQuery("(min-width:600px)");
 
     const handleClose = () => {
@@ -91,7 +91,7 @@ const AccountForm = ({ title, onClose, onSubmit }) => {
                             onSubmit(values);
                             setSubmitting(false);
                         }}
-                        initialValues={initialValues}
+                        initialValues={initialData || initialValues}
                         validationSchema={checkoutSchema}
                     >
                         {({

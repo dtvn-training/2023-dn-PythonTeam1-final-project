@@ -182,6 +182,20 @@ const Campaign = () => {
                         color: "white",
                         fontSize: 16,
                     },
+                    "$ .MuiTablePagination-displayedRows": {
+                        fontSize: "2rem",
+                    },
+                    "& .MuiDataGrid-footerContainer": {
+                        justifyContent: "center"
+                    },
+                    "& .MuiTablePagination-toolbar": {
+                        paddingTop: "4rem"
+                    },
+                    "& .MuiTablePagination-displayedRows": {
+                        fontSize: "1.5rem",
+                        fontWeight: 500,
+                        color: "#468faf"
+                    },
                 }}>
                     <DataGrid
                         rows={mockData}
