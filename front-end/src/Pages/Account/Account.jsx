@@ -12,14 +12,29 @@ import { MainContainer, HeaderContainer, ButtonCus, Column, Table, StyledBox, Ed
 
 const Account = () => {
     const [accountData, setAccountData] = useState([]);
-    const [isFormVisible, setIsFormVisible] = useState(false);
-    const handleOpenForm = () => {
-        setIsFormVisible(true);
-    };
-    const handleCloseForm = () => {
-        setIsFormVisible(false);
-    };
+    const [isCreateFormVisible, setIsCreateFormVisible] = useState(false);
+    const [isEditFormVisible, setIsEditFormVisible] = useState(false);
+    const [selectedAccount, setSelectedAccount] = useState(null);
     const [csvData, setCSVData] = useState([]);
+    const [selectedRow, setSelectedRow] = useState(null);
+
+    const handleOpenEditForm = (row) => {
+        setSelectedRow(row);
+        setIsEditFormVisible(true);
+    };
+    const handleOpenCreateForm = () => {
+        setIsCreateFormVisible(true);
+        setSelectedAccount(null);
+    };
+
+    const handleCloseCreateForm = () => {
+        setIsCreateFormVisible(false);
+    };
+
+    const handleCloseEditForm = () => {
+        setIsEditFormVisible(false);
+        setSelectedAccount(null);
+    };
 
     const convertRoleIdToString = (roleId) => {
         switch (roleId) {
@@ -39,7 +54,6 @@ const Account = () => {
             .then(response => {
                 const list_acount = response.data.list_acount || [];
 
-
                 const dataWithIds = list_acount.map((account, index) => ({
                     ...account,
                     id: index + 1,
@@ -49,20 +63,16 @@ const Account = () => {
 
                 setAccountData(dataWithIds);
                 setCSVData(dataWithIds);
-
-                console.log('User data:', dataWithIds);
             })
             .catch(error => {
-                console.error('Error fetching data from API:', error);
+                toast.error('Error fetching data from API:', error);
             });
     }, []);
 
     const createAccount = async (userData) => {
         try {
             const response = await buildAPI.post("/api/account/register", userData);
-
             toast.success('User created successfully!');
-            console.log("Create User Response:", response);
 
             const updatedDataWithIds = [
                 {
@@ -80,7 +90,7 @@ const Account = () => {
             setAccountData(updatedDataWithIds);
             setCSVData(updatedDataWithIds);
 
-            handleCloseForm();
+            handleCloseCreateForm();
         } catch (error) {
             toast.error('Email is already in use. Please choose another email address.');
         }
@@ -99,17 +109,30 @@ const Account = () => {
                 setAccountData(updatedDataWithIds);
             })
             .catch(error => {
-                console.error('Error fetching updated data from API:', error);
+                toast.error('Error fetching updated data from API:', error);
+            });
+    };
+
+    const handleEditAccount = (selectedRow, userData) => {
+        console.log("user id update ", selectedRow.user_id)
+        buildAPI.put(`/api/account/update/${selectedRow.user_id}`, userData)
+            .then(response => {
+                toast.success('User updated successfully:', response.data);
+                updateUserData();
+                handleCloseEditForm();
+            })
+            .catch(error => {
+                toast.error('Error updating user:', error);
             });
     };
 
 
     const handleDeleteClick = (row) => {
-        if (window.confirm("Are you sure you want to delete this record?")) {
+        if (window.confirm("Are you sure you want to delete this account?")) {
             buildAPI
-                .delete(`/api/account/delete/${row.user_id}`)
+                .patch(`/api/account/delete/${row.user_id}`)
                 .then((response) => {
-                    toast.log('User deleted successfully:', response.data);
+                    toast.success('User deleted successfully:', response.data);
                     updateUserData();
                 })
                 .catch((error) => {
@@ -198,7 +221,7 @@ const Account = () => {
             flex: 1,
             renderCell: (params) => (
                 <Column>
-                    <EditButton onClick={handleOpenForm}>Edit</EditButton>
+                    <EditButton onClick={() => handleOpenEditForm(params.row)}>Edit</EditButton>
                     <DeleteButton onClick={() => handleDeleteClick(params.row)}>Delete</DeleteButton>
                 </Column>
             ),
@@ -219,12 +242,11 @@ const Account = () => {
                         </ButtonCus>
                     </CSVLink>
 
-                    <ButtonCus
-                        onClick={handleOpenForm}
-                    >Create Account</ButtonCus>
-                    {isFormVisible && (
-                        <AccountForm title="Create Account" onClose={handleCloseForm} onSubmit={createAccount} />
+                    <ButtonCus onClick={handleOpenCreateForm}>Create Account</ButtonCus>
+                    {isCreateFormVisible && (
+                        <AccountForm title={'Create Account'} onClose={handleCloseCreateForm} onSubmit={createAccount} />
                     )}
+
                     <ToastContainer />
                 </Box>
             </HeaderContainer>
@@ -235,6 +257,7 @@ const Account = () => {
                     <DataGrid
                         rows={accountData}
                         columns={columns}
+                        onRowClick={(params) => handleOpenEditForm(params.row)}
                         initialState={{
                             pagination: {
                                 paginationModel: {
