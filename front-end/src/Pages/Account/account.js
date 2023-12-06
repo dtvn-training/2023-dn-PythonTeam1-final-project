@@ -64,7 +64,7 @@ export const DeleteButton = styled.button`
 `;
 
 export const dataGridStyles = {
-    width: '99%',
+    width: '145rem',
     "& .MuiDataGrid-root": {
         border: "none",
     },

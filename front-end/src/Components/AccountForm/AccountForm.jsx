@@ -11,7 +11,7 @@ import * as yup from "yup";
 
 const AccountForm = ({ title, onClose, onSubmit, initialData }) => {
     const isNonMobile = useMediaQuery("(min-width:600px)");
-
+    const isEditMode = title === 'Edit Account';
     const handleClose = () => {
         onClose();
     };
@@ -143,6 +143,7 @@ const AccountForm = ({ title, onClose, onSubmit, initialData }) => {
                                                     onBlur={handleBlur}
                                                     onChange={handleChange}
                                                     value={values.email}
+                                                    disabled={isEditMode}
                                                     name="email"
                                                     error={!!touched.email && !!errors.email}
                                                     helperText={touched.email && errors.email}
@@ -255,6 +256,7 @@ const AccountForm = ({ title, onClose, onSubmit, initialData }) => {
                                                     select
                                                     onBlur={handleBlur}
                                                     onChange={handleChange}
+                                                    disabled={isEditMode}
                                                     value={values.role_id}
                                                     name="role_id"
                                                     error={!!touched.role_id && !!errors.role_id}
@@ -466,18 +468,18 @@ const phoneRegExp =
     /^((\+[1-9]{1,4}[ -]?)|(\([0-9]{2,3}\)[ -]?)|([0-9]{2,4})[ -]?)*?[0-9]{3,4}[ -]?[0-9]{3,4}$/;
 
 const checkoutSchema = yup.object().shape({
-    email: yup.string().email("invalid email").required("required"),
-    first_name: yup.string().required("required"),
-    last_name: yup.string().required("required"),
+    email: yup.string().email("invalid email").required("Email can not be left blank"),
+    first_name: yup.string().required("Can not be left blank"),
+    last_name: yup.string().required("Can not be left blank"),
     role_id: yup.string().required("Please select user role"),
-    address: yup.string().required("required"),
+    address: yup.string().required("Can not be left blank"),
     phone: yup
         .string()
         .matches(phoneRegExp, "Phone number is not valid")
-        .required("required"),
+        .required("Can not be left blank"),
     password: yup.string()
         .required('No password provided.')
-        .min(8, 'Password is too short - should be 8 chars minimum.'),
+        .min(8, 'Password is too short - should be 8 chars minimum.').max(30, 'Password is to long - should be 30 chars maximum'),
     confirm_password: yup.string().required('Please retype your password.').oneOf([yup.ref('password')], 'Your passwords do not match.')
 });
 

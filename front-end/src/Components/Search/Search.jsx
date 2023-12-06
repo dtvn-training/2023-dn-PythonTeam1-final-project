@@ -2,16 +2,19 @@ import { useState } from "react";
 import { Box } from '@mui/material'
 import InputBase from "@mui/material/InputBase";
 import * as React from 'react';
+import buildAPI from "../../const/buildAPI";
 
 const Search = () => {
-    const [searchText, setSearchText] = useState('');
+    const [setSearchResults] = useState([]);
+    const [query, setQuery] = useState('');
 
-    const handleSearchChange = (e) => {
-        setSearchText(e.target.value);
-    };
-
-    const handleSearchSubmit = () => {
-        console.log('Search Text:', searchText);
+    const handleSearch = async () => {
+        try {
+            const response = await buildAPI.get(`/api/search/?query=${query}`);
+            setSearchResults(response.data);
+        } catch (error) {
+            console.error('Error fetching search results:', error);
+        }
     };
 
     return (
@@ -34,9 +37,9 @@ const Search = () => {
                     },
                 }}
                 placeholder="Search..."
-                value={searchText}
-                onChange={handleSearchChange}
-                onKeyDown={(e) => e.key === 'Enter' && handleSearchSubmit()}
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
             />
         </Box>
     );

@@ -14,7 +14,6 @@ const Account = () => {
     const [accountData, setAccountData] = useState([]);
     const [isCreateFormVisible, setIsCreateFormVisible] = useState(false);
     const [isEditFormVisible, setIsEditFormVisible] = useState(false);
-    const [selectedAccount, setSelectedAccount] = useState(null);
     const [csvData, setCSVData] = useState([]);
     const [selectedRow, setSelectedRow] = useState(null);
 
@@ -24,11 +23,9 @@ const Account = () => {
     };
     const handleCloseEditForm = () => {
         setIsEditFormVisible(false);
-        setSelectedAccount(null);
     };
     const handleOpenCreateForm = () => {
         setIsCreateFormVisible(true);
-        setSelectedAccount(null);
     };
     const handleCloseCreateForm = () => {
         setIsCreateFormVisible(false);
@@ -42,6 +39,19 @@ const Account = () => {
                 return "Agency";
             case "3":
                 return "Advertiser";
+            default:
+                return `Unknown Role (${roleId})`;
+        }
+    };
+
+    const convertRoleIdToInt = (roleId) => {
+        switch (roleId) {
+            case "Admin":
+                return "1";
+            case "Agency":
+                return "2";
+            case "Advertiser":
+                return "3";
             default:
                 return `Unknown Role (${roleId})`;
         }
@@ -112,15 +122,25 @@ const Account = () => {
     };
 
     const handleEditAccount = (selectedRow, userData) => {
-        console.log("user id update ", selectedRow.user_id)
+        userData.user_id = selectedRow.user_id;
+
+        userData.role_id = convertRoleIdToInt(userData.role_id)
+
         buildAPI.put(`/api/account/update/${selectedRow.user_id}`, userData)
             .then(response => {
-                toast.success('User updated successfully:', response.data);
+                toast.success('User updated successfully ', response.data.first_name);
                 updateUserData();
                 handleCloseEditForm();
+                updateUserData();
             })
             .catch(error => {
-                toast.error('Error updating user:', error);
+                console.error('Error updating user ', error);
+
+                if (error.response && error.response.data && error.response.data.detail) {
+                    console.log('Validation errors: ', error.response.data.detail);
+                }
+
+                toast.error('Error updating user');
             });
     };
 
@@ -249,7 +269,7 @@ const Account = () => {
                             title={'Edit Account'}
                             onClose={handleCloseEditForm}
                             onSubmit={(userData) => handleEditAccount(selectedRow, userData)}
-                            initialValues={{
+                            initialData={{
                                 first_name: selectedRow.first_name,
                                 last_name: selectedRow.last_name,
                                 email: selectedRow.email,

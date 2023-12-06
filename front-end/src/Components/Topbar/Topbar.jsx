@@ -8,7 +8,7 @@ const Topbar = () => {
             display="flex"
             justifyContent="space-between"
             alignItems="center"
-            height="6rem"
+            height="5rem"
             sx={{
                 background: "#468faf",
                 fontWeight: "600",
