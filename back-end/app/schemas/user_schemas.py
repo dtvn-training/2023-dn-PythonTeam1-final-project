@@ -11,8 +11,12 @@ class UserInfo(BaseModel):
     phone: str
 
 
+class UserOut(UserInfo):
+    user_id: str
+
+
 class ListUserOut(BaseModel):
-    list_acount: List[UserInfo]
+    list_acount: List[UserOut]
 
 
 class UserCreate(UserInfo):
@@ -26,5 +30,6 @@ class UserLogin(BaseModel):
 
 
 class UserUpdate(UserInfo):
+    user_id: str
     password: str
     confirm_password: str
