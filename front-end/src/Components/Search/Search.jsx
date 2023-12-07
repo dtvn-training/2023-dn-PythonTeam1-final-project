@@ -2,20 +2,25 @@ import { useState } from "react";
 import { Box } from '@mui/material'
 import InputBase from "@mui/material/InputBase";
 import * as React from 'react';
-import buildAPI from "../../const/buildAPI";
 
-const Search = () => {
-    const [setSearchResults] = useState([]);
+const Search = ({ data, onSearch }) => {
     const [query, setQuery] = useState('');
 
-    const handleSearch = async () => {
-        try {
-            const response = await buildAPI.get(`/api/search/?query=${query}`);
-            setSearchResults(response.data);
-        } catch (error) {
-            console.error('Error fetching search results:', error);
-        }
+    const handleSearch = () => {
+        const queryWords = query.toLowerCase().split(/\s+/);
+
+        const filteredData = data.filter((item) =>
+            queryWords.every(
+                (word) =>
+                    item.user_name.toLowerCase().includes(word) ||
+                    item.email.toLowerCase().includes(word)
+            )
+        );
+
+        console.log('data: ', filteredData);
+        onSearch(filteredData);
     };
+
 
     return (
         <Box

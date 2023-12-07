@@ -1,12 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Box, IconButton, Avatar } from "@mui/material";
 import { Sidebar, Menu, MenuItem } from "react-pro-sidebar";
 import { Link, useLocation } from "react-router-dom";
 import ViewSidebarOutlinedIcon from '@mui/icons-material/ViewSidebarOutlined';
-// import DashboardCustomizeOutlinedIcon from '@mui/icons-material/DashboardCustomizeOutlined';
 import CampaignOutlinedIcon from '@mui/icons-material/CampaignOutlined';
 import SupervisorAccountOutlinedIcon from '@mui/icons-material/SupervisorAccountOutlined';
 import './mysidebar.scss';
+import buildAPI from "../../const/buildAPI";
 
 // MENU ITEM FORM
 const Item = ({ title, to, icon, setSelected }) => {
@@ -31,6 +31,30 @@ const Item = ({ title, to, icon, setSelected }) => {
 const Mysidebar = () => {
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [selected, setSelected] = useState("Dashboard");
+    const [userName, setUserName] = useState("");
+    const [userAvatar, setuserAvatar] = useState("")
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+            try {
+                const response = await buildAPI.get("/api/account/get_user_info");
+                setUserName(response.data.name);
+                const absolutePath = response.data.avatar;
+                const basePath = "front-end/public/";
+                const startIndex = absolutePath.indexOf(basePath);
+                const relativePath = absolutePath.substring(startIndex + basePath.length);
+                const transformedPath = `../${relativePath}`;
+                if (response.data.avatar !== null) {
+                    setuserAvatar(transformedPath);
+                } else {
+                    setuserAvatar("../assets/Images/user.jpg")
+                }
+            } catch (error) {
+                console.error("Error fetching user data:", error);
+            }
+        };
+        fetchUserData();
+    }, []);
 
     return (
         <Sidebar
@@ -65,18 +89,12 @@ const Mysidebar = () => {
                 {!isCollapsed && (
                     <Box className="imageUser">
                         <Box className="image">
-                            <Avatar alt="user-image" src="../assets/Images/user.jpg" sx={{ width: "20rem", height: "20rem" }} />
+                            <Avatar alt="user-image" src={userAvatar} sx={{ width: "20rem", height: "20rem" }} />
                         </Box>
+
                         <Box textAlign="center">
-                            <sp
-                                variant="body1"
-                                color="white"
-                                fontSize="2.2rem"
-                                sx={{
-                                    cursor: "pointer"
-                                }}
-                            >
-                                User Name
+                            <sp className='userName'>
+                                {userName}
                             </sp>
                         </Box>
                     </Box>

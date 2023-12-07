@@ -31,6 +31,10 @@ const Account = () => {
         setIsCreateFormVisible(false);
     };
 
+    const handleSearch = (searchResults) => {
+        setAccountData(searchResults);
+    };
+
     const convertRoleIdToString = (roleId) => {
         switch (roleId) {
             case "1":
@@ -250,7 +254,7 @@ const Account = () => {
         <MainContainer>
             <HeaderContainer>
                 {/* SEARCH BAR */}
-                <Search />
+                <Search data={csvData} onSearch={handleSearch} />
 
                 {/* EXPORT CSV $ CREATE ACCOUNT */}
                 <Box>
