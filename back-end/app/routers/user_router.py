@@ -1,4 +1,4 @@
-from fastapi import APIRouter, status, Depends, HTTPException, Query
+from fastapi import APIRouter, status, Depends, HTTPException, Query, File, UploadFile
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
@@ -55,7 +55,16 @@ async def delete_user(user_id: str, token: Annotated[str | None, Depends(oauth2_
         return JSONResponse(status_code=e.status_code, content={"detail": e.detail})
 
 
-@router.get("/search", response_model=user_schemas.ListUserOut)
-def search_users(token: str = Depends(oauth2_scheme), query: str = Query(..., description="Search query"), db: Session = Depends(get_db)):
-    users = user_controller.search_users(token, query, db)
-    return {"list_acount": users}
+@router.get("/get_user_info")
+async def get_current_username(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+    info = user_controller.get_current_username(token, db)
+    return info
+
+
+@router.post("/upload-avatar")
+async def upload_avatar(token: str = Depends(oauth2_scheme), file: UploadFile = File(...), db: Session = Depends(get_db)):
+    try:
+        user_controller.save_avatar(token, file, db)
+        return JSONResponse(content={"message": "Avatar uploaded successfully"}, status_code=200)
+    except HTTPException as e:
+        return JSONResponse(content={"message": f"Error: {str(e.detail)}"}, status_code=e.status_code)

@@ -5,6 +5,8 @@ from ..models import user_model
 from ..schemas import user_schemas
 from ..connectDB.database import get_db
 from ..controllers import auth_controller as auth
+from fastapi import UploadFile
+import os
 
 
 def get_users(token: str, db: Session = Depends(get_db)):
@@ -113,18 +115,36 @@ def delete_user(user_id: str, token: str, db: Session):
     return user
 
 
-def search_users(token: str,  query: str, db: Session):
+def get_current_username(token: str, db: Session):
     user = auth.get_current_user(token, db)
-    if user.role_id != '1':
+    user.avatar = user.avatar.replace("\\", "/")
+    return {"name": user.first_name + " " + user.last_name, "user_id": user.user_id, "avatar": user.avatar}
+
+
+def save_avatar(token: str, file: UploadFile, db: Session):
+    try:
+        user = auth.get_current_user(token, db)
+
+        # Đảm bảo folder để lưu hình ảnh tồn tại
+        upload_folder = "C:/Users/USER/Documents/2023-dn-PythonTeam1-final-project/front-end/public/assets/avatars"
+        os.makedirs(upload_folder, exist_ok=True)
+
+        # Lưu file vào thư mục
+        file_path = os.path.join(upload_folder, file.filename)
+        with open(file_path, "wb") as image:
+            image.write(file.file.read())
+
+        # Lưu đường dẫn file vào cơ sở dữ liệu
+        user.avatar = file_path
+        db.commit()
+
+        return {"message": "Avatar saved successfully"}
+
+    except Exception as e:
+        os.remove(file_path)
         raise HTTPException(
-            status_code=status.HTTP_407_PROXY_AUTHENTICATION_REQUIRED,
-            detail='Permission user'
-        )
-    users = db.query(user_model.User).filter(
-        or_(
-            user_model.User.email.ilike(f"%{query}%"),
-            user_model.User.first_name.ilike(f"%{query}%"),
-            user_model.User.last_name.ilike(f"%{query}%")
-        )
-    ).all()
-    return users
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error saving avatar: {str(e)}"
+        ) from e
+    finally:
+        db.close()
