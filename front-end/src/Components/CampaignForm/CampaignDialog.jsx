@@ -9,7 +9,7 @@ import {
   DialogTitle,
 } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -31,8 +31,8 @@ const defaultState = {
   campaignId: "",
   campaignName: "",
   userStatus: true,
-  startDate: "",
-  endDate: "",
+  startDate: undefined,
+  endDate: undefined,
   budget: 0,
   bidAmount: 0,
   title: "",
@@ -626,6 +626,7 @@ const CampaignDialog = ({ title, onClose, initialState = defaultState }) => {
                         </Typography>
                         <ImageUploader
                           getImagePreview={setImageUrl}
+                          initialImagePreview={initialState.creativePreview}
                         ></ImageUploader>
                       </Box>
                     </AccordionDetails>

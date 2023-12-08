@@ -93,11 +93,11 @@ const PictureCropForm = ({ handleClose, imageSrc, setImageCrop }) => {
           setImageCrop(croppedImageUrl);
           // You can now use 'croppedImageUrl' as needed (e.g., upload to a server, display in UI, etc.)
         } else {
-          console.error("Failed to create Blob from canvas.");
+          // console.error("Failed to create Blob from canvas.");
         }
       }, "image/jpeg");
     } else {
-      console.log("No crop data available.");
+      // console.log("No crop data available.");
     }
   };
 
@@ -130,15 +130,21 @@ const PictureCropForm = ({ handleClose, imageSrc, setImageCrop }) => {
       </DialogTitle>
 
       <DialogContent>
-        <div>
+        <Box
+          container
+          spacing={0}
+          direction="column"
+          alignItems="center"
+          justifyContent="center"
+        >
           <ReactCrop
             crop={crop}
             onChange={onCropChange}
             onComplete={onCropComplete}
           >
-            <img src={imageSrc} alt="" onLoad={onImageLoad} />
+            <img src={imageSrc} alt="Image Crop" onLoad={onImageLoad} />
           </ReactCrop>
-        </div>
+        </Box>
       </DialogContent>
 
       <DialogActions>

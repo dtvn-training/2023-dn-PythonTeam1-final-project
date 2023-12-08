@@ -12,40 +12,48 @@ const dateToString = (value) => {
   return value.format("YYYY-MM-DD HH:mm");
 };
 
-const DatetimePicker = (props) => {
-  const [startDate, setStartDate] = useState(dayjs(""));
-  const [endDate, setEndDate] = useState(dayjs(""));
+const defaultStartDate = dayjs({ timeZone: "UTC" }).day();
+const defaultEndtDate = dayjs({ timeZone: "UTC" }).day();
 
+const DatetimePicker = ({
+  initialStartDate = defaultStartDate,
+  passStartDate,
+  initialEndDate = defaultEndtDate,
+  passEndDate,
+}) => {
+  const [startDate, setStartDate] = useState(dayjs());
+  const [endDate, setEndDate] = useState(dayjs());
+  // console.log(initialStartDate, initialEndDate);
   const dateParse = (dateString) => {
     const formattedDate = dayjs(dateString, { timeZone: "UTC" });
     return formattedDate;
   };
 
   useEffect(() => {
-    if (props.initialStartDate) {
+    if (initialStartDate) {
       setStartDate(() => {
-        return dateParse(props.initialStartDate);
+        return dateParse(initialStartDate);
       });
 
-      if (props.passStartDate) props.passStartDate(props.initialStartDate);
+      if (passStartDate) passStartDate(initialStartDate);
     }
 
-    if (props.initialEndDate) {
+    if (initialEndDate) {
       setEndDate(() => {
-        return dateParse(props.initialEndDate);
+        return dateParse(initialEndDate);
       });
-      if (props.passEndDate) props.passEndDate(props.initialEndDate);
+      if (passEndDate) passEndDate(initialEndDate);
     }
   }, []);
 
   const handleStartDateChange = (newValue) => {
     setStartDate(newValue);
-    if (props.passStartDate) props.passStartDate(dateToString(newValue));
+    if (passStartDate) passStartDate(dateToString(newValue));
   };
 
   const handleEndDateChange = (newValue) => {
     setEndDate(newValue);
-    if (props.passEndDate) props.passEndDate(dateToString(newValue));
+    if (passEndDate) passEndDate(dateToString(newValue));
   };
 
   return (

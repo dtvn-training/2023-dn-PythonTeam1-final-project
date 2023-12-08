@@ -3,11 +3,19 @@ import "./imageUploader.scss";
 import PictureCropForm from "../PictureCropForm/PictureCropForm";
 import { Button } from "@mui/material";
 
-const ImageUploader = ({ getImagePreview, error }) => {
+const defaultImagePreview = undefined;
+
+const ImageUploader = ({
+  getImagePreview,
+  initialImagePreview = defaultImagePreview,
+}) => {
   const [imagePreview, setImagePreview] = useState();
   const [isOpenCrop, setIsOpenCrop] = useState(false);
 
   //Clean image upload
+  useEffect(() => {
+    setImagePreview(initialImagePreview);
+  }, []);
   useEffect(() => {
     imagePreview && getImagePreview(imagePreview);
     return () => {
