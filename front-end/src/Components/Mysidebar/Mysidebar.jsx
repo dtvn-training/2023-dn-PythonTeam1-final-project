@@ -112,7 +112,7 @@ const Mysidebar = () => {
 
                     <Item
                         title="Campaign"
-                        to="/campaign"
+                        to="/"
                         icon={<CampaignOutlinedIcon style={{ fontSize: '2.6rem' }} />}
                         selected={selected}
                         setSelected={setSelected}
