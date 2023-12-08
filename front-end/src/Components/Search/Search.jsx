@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Box } from '@mui/material'
-import InputBase from "@mui/material/InputBase";
 import * as React from 'react';
+import './search.scss';
 
 const Search = ({ data, onSearch }) => {
     const [query, setQuery] = useState('');
@@ -26,26 +26,14 @@ const Search = ({ data, onSearch }) => {
         <Box
             display="flex"
         >
-            <InputBase
-                sx={{
-                    pl: 2,
-                    ml: 6,
-                    height: "4.6rem",
-                    width: "30rem",
-                    backgroundColor: '#ccc',
-                    input: {
-                        fontSize: "1.8rem",
-                        "::placeholder": {
-                            color: "black",
-                            fontWeight: 500,
-                        },
-                    },
-                }}
+            <input
+                type="text"
                 placeholder="Search..."
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                onKeyDown={(e) => e.key === 'Enter' && handleSearch(e.target.value)}
             />
+
         </Box>
     );
 };

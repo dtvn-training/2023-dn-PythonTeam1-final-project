@@ -33,6 +33,7 @@ export const ButtonCus = styled.button`
 `;
 
 export const Table = styled.div`
+    width: 95%;
     margin-left: 5rem;
     margin-top: 4rem
 `;
@@ -64,7 +65,7 @@ export const DeleteButton = styled.button`
 `;
 
 export const dataGridStyles = {
-    width: '145rem',
+    width: '100%',
     "& .MuiDataGrid-root": {
         border: "none",
     },
