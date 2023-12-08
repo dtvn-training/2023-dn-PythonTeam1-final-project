@@ -7,12 +7,13 @@ import CampaignOutlinedIcon from '@mui/icons-material/CampaignOutlined';
 import SupervisorAccountOutlinedIcon from '@mui/icons-material/SupervisorAccountOutlined';
 import './mysidebar.scss';
 import buildAPI from "../../const/buildAPI";
+import { storage } from "../../const/firebase";
+import { getDownloadURL, ref } from "firebase/storage";
 
 // MENU ITEM FORM
 const Item = ({ title, to, icon, setSelected }) => {
     const location = useLocation();
     const isActive = location.pathname === to;
-
     return (
         <Link to={to} className="customLink">
             <MenuItem
@@ -31,30 +32,26 @@ const Item = ({ title, to, icon, setSelected }) => {
 const Mysidebar = () => {
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [selected, setSelected] = useState("Dashboard");
-    const [userName, setUserName] = useState("");
-    const [userAvatar, setuserAvatar] = useState("")
+    const [userName, setUserName] = useState(null);
+    const [avatar, setavatar] = useState(null)
 
     useEffect(() => {
         const fetchUserData = async () => {
             try {
                 const response = await buildAPI.get("/api/account/get_user_info");
                 setUserName(response.data.name);
-                const absolutePath = response.data.avatar;
-                const basePath = "front-end/public/";
-                const startIndex = absolutePath.indexOf(basePath);
-                const relativePath = absolutePath.substring(startIndex + basePath.length);
-                const transformedPath = `../${relativePath}`;
-                if (response.data.avatar !== null) {
-                    setuserAvatar(transformedPath);
-                } else {
-                    setuserAvatar("../assets/Images/user.jpg")
-                }
+                const imageRef = ref(storage, `files/${userName}/avatar`);
+                getDownloadURL(imageRef).then((image) => {
+                    setavatar(image)
+                }).catch((error) => {
+                    console.log('Error getting download URL: ', error.message);
+                });
             } catch (error) {
                 console.error("Error fetching user data:", error);
             }
         };
         fetchUserData();
-    }, []);
+    }, [userName]);
 
     return (
         <Sidebar
@@ -89,10 +86,13 @@ const Mysidebar = () => {
                 {!isCollapsed && (
                     <Box className="imageUser">
                         <Box className="image">
-                            <Avatar alt="user-image" src={userAvatar} sx={{ width: "20rem", height: "20rem" }} />
+                            <Avatar alt="user-image"
+                                // src={"../assets/Images/user.jpg"} 
+                                src={avatar}
+                                style={{ width: "20rem", height: "20rem" }} />
                         </Box>
 
-                        <Box textAlign="center">
+                        <Box className='box-username'>
                             <sp className='userName'>
                                 {userName}
                             </sp>
