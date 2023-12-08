@@ -1,13 +1,12 @@
 import Login from './Pages/LoginPage/Login';
 import React, { useEffect, Suspense, lazy } from 'react';
-// import Dashboard from './Pages/DashBoard/DashBoard';
 import './App.css';
 import Campaign from './Pages/Campaign/Campaign.jsx';
 import Account from './Pages/Account/Account.jsx';
 import { useSelector, useDispatch } from "react-redux";
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { validateToken } from './redux/actions/authAction';
-// import Loading from './Components/Loading/Loading.jsx';
+import Loading from './Components/Loading/Loading.jsx';
 
 
 
@@ -23,13 +22,13 @@ function App() {
     dispatch(validateToken())
   }, [])
   return (
-    <Suspense fallback={""}>
+    <Suspense fallback={<Loading />}>
       <BrowserRouter>
         <Routes>
           <Route path="/account" element={
             isLogged ?
               <View>
-                <Campaign />
+                <Account />
               </View>
               : <Navigate to="/login" />
           }

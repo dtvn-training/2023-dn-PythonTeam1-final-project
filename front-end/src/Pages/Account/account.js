@@ -12,6 +12,7 @@ export const MainContainer = styled.div`
 export const HeaderContainer = styled.div`
   margin-top: 12rem;
   margin-right: 2rem;
+  margin-left: 5rem;
   display: flex;
   justify-content: space-between;
 `;
