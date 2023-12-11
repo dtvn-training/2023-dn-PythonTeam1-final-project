@@ -19,6 +19,10 @@ def create_a_campaign_service(campaign: campaign_schemas.CampaignInfo, user_id: 
         del campaign_dict['campaign_name']
         creative_dict = campaign_dict['creative']
         del campaign_dict['creative']
+        validate_campaign_fields(campaign_dict['name'], campaign_dict['status'], 0, 0, campaign_dict['budget'],
+                                 campaign_dict['bid_amount'], campaign_dict['start_date'], campaign_dict['end_date'])
+        validate_creative_fields(
+            creative_dict['title'], creative_dict['description'], creative_dict['img_preview'], creative_dict['url'])
         new_campaign = campaign_model.Campaign(**campaign_dict)
         db.add(new_campaign)
         db.commit()
@@ -181,6 +185,10 @@ def update_a_campaign_service(campaign: campaign_schemas.CampaignUpdate, user_id
                 "url": creative_record.url
             }
         }
+        validate_campaign_fields(campaign_record.name, campaign_record.status, campaign_record.used_amount, campaign_record.usage_rate,
+                                 campaign_record.budget, campaign_record.bid_amount, campaign_record.start_date, campaign_record.end_date)
+        validate_creative_fields(creative_record.title, creative_record.description,
+                                 creative_record.img_preview, creative_record.url)
         db.commit()
         db.refresh(campaign_record)
 
@@ -271,8 +279,62 @@ def select_all_campaigns_service(user_id: str, db: Session):
 def convertStrToDatetime(datetime_str: str | None):
     if datetime_str == "":
         return ""
-    return datetime.strptime(datetime_str, "%Y-%m-%d %H:%M")
+    try:
+        StrToDatetime = datetime.strptime(datetime_str, "%Y-%m-%d %H:%M")
+    except:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                            detail="Invalid date")
+    return StrToDatetime
 
 
 def convertDatetimeToStr(datetime_obj: datetime | None):
-    return datetime_obj.strftime("%Y-%m-%d %H:%M")
+    try:
+        StrToDatetime = datetime_obj.strftime("%Y-%m-%d %H:%M")
+    except:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                            detail="Invalid date")
+    return
+
+
+def validate_campaign_fields(name, status, used_amount, usage_rate, budget, bid_amount, start_date, end_date):
+    if not isinstance(name, str) or name.len() > 200:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                            detail="Invalid campaign name")
+    if not isinstance(status, bool):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                            detail="Invalid status")
+
+    if not isinstance(used_amount, int):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                            detail="Invalid used amount")
+
+    if not isinstance(usage_rate, float):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                            detail="Invalid usage rate")
+    if not isinstance(budget, int):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                            detail="Invalid budget")
+    if not isinstance(bid_amount, int):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                            detail="Invalid bid amount")
+    if not isinstance(start_date, datetime):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                            detail="Invalid start date")
+    if not isinstance(end_date, datetime):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                            detail="Invalid end date")
+
+
+def validate_creative_fields(title, description, img_preview, url):
+    if not isinstance(title, str) or title.len() > 200:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                            detail="Invalid creative title")
+    if not isinstance(description, str) or title.len() > 500:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                            detail="Invalid creative description")
+    if not isinstance(img_preview, str) or title.len() > 200:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                            detail="Invalid creative image preiview url")
+    if not isinstance(title, str) or title.len() > 200:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                            detail="Invalid creative final url")
