@@ -32,6 +32,12 @@ async def get_the_number_of_campaign_pages(token: Annotated[str | None, Depends(
     return {"the_number_of_pages": number_of_pages}
 
 
+@router.get("/all")
+async def get_all_campaings(token: Annotated[str | None, Depends(oauth2_scheme)], db: Session = Depends(get_db)):
+    list_campaign = campaign_controller.select_all_campaigns(token, db)
+    return {"campaigns": list_campaign}
+
+
 @router.get("/")
 async def get_a_page_campaign(page: int, token: Annotated[str | None, Depends(oauth2_scheme)], db: Session = Depends(get_db)):
     list_campaign = campaign_controller.select_a_page_campaign(page, token, db)
@@ -47,11 +53,13 @@ async def get_a_campaign(campaign_id, token: Annotated[str | None, Depends(oauth
 
 @router.put("/")
 async def update_a_campaign(campaign: campaign_schemas.CampaignUpdate, token: Annotated[str | None, Depends(oauth2_scheme)], db: Session = Depends(get_db)):
-    campaign_controller.update_a_campaign(campaign, token, db)
-    return {"msg": "Campaign is updated"}
+    updated_campaign = campaign_controller.update_a_campaign(
+        campaign, token, db)
+    return {"msg": "Campaign is updated", "campaign": updated_campaign}
 
 
 @router.patch("/")
 async def delete_campaigns(campaigns: campaign_schemas.CampaignDelete, token: Annotated[str | None, Depends(oauth2_scheme)], db: Session = Depends(get_db)):
-    campaign_controller.delete_campaigns(campaigns, token, db)
-    return {"msg": "Deleted successful"}
+    list_deleted_campaign = campaign_controller.delete_campaigns(
+        campaigns, token, db)
+    return {"msg": "Deleted successful", "campaigns": list_deleted_campaign}
