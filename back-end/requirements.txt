@@ -1,0 +1,13 @@
+sqlalchemy
+pydantic
+pydantic-settings
+python-multipart
+pydantic[email]
+Pylance
+psycopg2
+pymysql
+uvicorn
+fastapi
+python-dotenv
+passlib[bcrypt]
+python-jose[cryptography]
