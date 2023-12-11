@@ -8,36 +8,36 @@ from ..models import campaign_model, creative_model
 
 
 def create_a_campaign_service(campaign: campaign_schemas.CampaignInfo, user_id: str, db: Session):
-    try:
-        campaign_dict = campaign.dict()
-        campaign_dict["user_id"] = user_id
-        campaign_dict["start_date"] = convertStrToDatetime(
-            campaign_dict["start_date"])
-        campaign_dict["end_date"] = convertStrToDatetime(
-            campaign_dict["end_date"])
-        campaign_dict['name'] = campaign_dict['campaign_name']
-        del campaign_dict['campaign_name']
-        creative_dict = campaign_dict['creative']
-        del campaign_dict['creative']
-        validate_campaign_fields(campaign_dict['name'], campaign_dict['status'], 0, 0, campaign_dict['budget'],
-                                 campaign_dict['bid_amount'], campaign_dict['start_date'], campaign_dict['end_date'])
-        validate_creative_fields(
-            creative_dict['title'], creative_dict['description'], creative_dict['img_preview'], creative_dict['url'])
-        new_campaign = campaign_model.Campaign(**campaign_dict)
-        db.add(new_campaign)
-        db.commit()
-        db.refresh(new_campaign)
+    # try:
+    campaign_dict = campaign.dict()
+    campaign_dict["user_id"] = user_id
+    campaign_dict["start_date"] = convertStrToDatetime(
+        campaign_dict["start_date"])
+    campaign_dict["end_date"] = convertStrToDatetime(
+        campaign_dict["end_date"])
+    campaign_dict['name'] = campaign_dict['campaign_name']
+    del campaign_dict['campaign_name']
+    creative_dict = campaign_dict['creative']
+    del campaign_dict['creative']
+    validate_campaign_fields(campaign_dict['name'], campaign_dict['status'], campaign_dict['budget'],
+                             campaign_dict['bid_amount'], campaign_dict['start_date'], campaign_dict['end_date'])
+    validate_creative_fields(
+        creative_dict['title'], creative_dict['description'], creative_dict['img_preview'], creative_dict['url'])
+    new_campaign = campaign_model.Campaign(**campaign_dict)
+    db.add(new_campaign)
+    db.commit()
+    db.refresh(new_campaign)
 
-        creative_dict['campaign_id'] = new_campaign.campaign_id
-        new_creative = creative_model.Creative(**creative_dict)
+    creative_dict['campaign_id'] = new_campaign.campaign_id
+    new_creative = creative_model.Creative(**creative_dict)
 
-        db.add(new_creative)
-        db.commit()
-        db.refresh(new_creative)
+    db.add(new_creative)
+    db.commit()
+    db.refresh(new_creative)
 
-    except:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail="Campaign isn't created")
+    # except:
+    #     raise HTTPException(
+    #         status_code=status.HTTP_400_BAD_REQUEST, detail="Campaign isn't created")
     return new_campaign
 
 
@@ -185,7 +185,7 @@ def update_a_campaign_service(campaign: campaign_schemas.CampaignUpdate, user_id
                 "url": creative_record.url
             }
         }
-        validate_campaign_fields(campaign_record.name, campaign_record.status, campaign_record.used_amount, campaign_record.usage_rate,
+        validate_campaign_fields(campaign_record.name, campaign_record.status,
                                  campaign_record.budget, campaign_record.bid_amount, campaign_record.start_date, campaign_record.end_date)
         validate_creative_fields(creative_record.title, creative_record.description,
                                  creative_record.img_preview, creative_record.url)
@@ -293,48 +293,61 @@ def convertDatetimeToStr(datetime_obj: datetime | None):
     except:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
                             detail="Invalid date")
-    return
+    return StrToDatetime
 
 
-def validate_campaign_fields(name, status, used_amount, usage_rate, budget, bid_amount, start_date, end_date):
-    if not isinstance(name, str) or name.len() > 200:
+def validate_campaign_fields(name, user_status, budget, bid_amount, start_date, end_date):
+    # name
+    if not isinstance(name, str) or len(name) > 200:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
                             detail="Invalid campaign name")
-    if not isinstance(status, bool):
+    # status
+    if not isinstance(user_status, bool):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
                             detail="Invalid status")
-
-    if not isinstance(used_amount, int):
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-                            detail="Invalid used amount")
-
-    if not isinstance(usage_rate, float):
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-                            detail="Invalid usage rate")
+    # budget
     if not isinstance(budget, int):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
                             detail="Invalid budget")
+    if budget <= 0:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                            detail="Budget is greater than 0")
+
+    # bid_amount
     if not isinstance(bid_amount, int):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
                             detail="Invalid bid amount")
+    if bid_amount <= 0:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                            detail="Bid amount is greater than 0")
+    if bid_amount > budget:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                            detail="Bid amount is equal or smaller than budget")
+
+    # start_date
     if not isinstance(start_date, datetime):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
                             detail="Invalid start date")
+    # end_date
     if not isinstance(end_date, datetime):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
                             detail="Invalid end date")
 
 
 def validate_creative_fields(title, description, img_preview, url):
-    if not isinstance(title, str) or title.len() > 200:
+    # title
+    if not isinstance(title, str) or len(title) > 200:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
                             detail="Invalid creative title")
-    if not isinstance(description, str) or title.len() > 500:
+    # description
+    if not isinstance(description, str) or len(description) > 500:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
                             detail="Invalid creative description")
-    if not isinstance(img_preview, str) or title.len() > 200:
+    # image preview
+    if not isinstance(img_preview, str) or len(img_preview) > 200:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
                             detail="Invalid creative image preiview url")
-    if not isinstance(title, str) or title.len() > 200:
+    # url
+    if not isinstance(url, str) or len(url) > 200:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
                             detail="Invalid creative final url")

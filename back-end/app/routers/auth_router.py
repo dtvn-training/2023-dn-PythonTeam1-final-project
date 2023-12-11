@@ -9,7 +9,7 @@ from ..controllers import auth_controller as auth
 
 router = APIRouter(
     prefix="/auth",
-    tags=['Authencation']
+    tags=['Authentication']
 )
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
