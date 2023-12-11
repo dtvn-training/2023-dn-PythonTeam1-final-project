@@ -11,14 +11,11 @@ import { ClearIcon } from "@mui/x-date-pickers";
 import "./PictureCropForm.scss";
 import "react-image-crop/src/ReactCrop.scss";
 import { useRef, useState } from "react";
-import ReactCrop, { centerCrop, makeAspectCrop } from "react-image-crop";
+import ReactCrop, { centerCrop, makeAspectCrop, Crop } from "react-image-crop";
 
 const PictureCropForm = ({ handleClose, imageSrc, setImageCrop }) => {
   // const [open, setOpen] = useState(false);
-  const [crop, setCrop] = useState({
-    unit: "%",
-    aspect: 4 / 1,
-  });
+  const [crop, setCrop] = useState();
   const [isHovered, setIsHovered] = useState(false);
 
   const cropRef = useRef(null);
@@ -42,6 +39,14 @@ const PictureCropForm = ({ handleClose, imageSrc, setImageCrop }) => {
       height
     );
 
+    const pixelCrop = {
+      height: 44,
+      unit: "%",
+      width: 100,
+      x: 0,
+      y: 27,
+    };
+    cropRef.current = { crop, pixelCrop };
     setCrop(crop);
   };
 
@@ -90,8 +95,6 @@ const PictureCropForm = ({ handleClose, imageSrc, setImageCrop }) => {
           const croppedImageUrl = URL.createObjectURL(blob);
           setImageCrop(croppedImageUrl);
           handleClose();
-          setImageCrop(croppedImageUrl);
-          // You can now use 'croppedImageUrl' as needed (e.g., upload to a server, display in UI, etc.)
         } else {
           // console.error("Failed to create Blob from canvas.");
         }
@@ -142,7 +145,7 @@ const PictureCropForm = ({ handleClose, imageSrc, setImageCrop }) => {
             onChange={onCropChange}
             onComplete={onCropComplete}
           >
-            <img src={imageSrc} alt="Image Crop" onLoad={onImageLoad} />
+            <img src={imageSrc} alt="Crop_image" onLoad={onImageLoad} />
           </ReactCrop>
         </Box>
       </DialogContent>

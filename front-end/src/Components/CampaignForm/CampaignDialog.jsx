@@ -9,7 +9,7 @@ import {
   DialogTitle,
 } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -25,7 +25,6 @@ import ImageUploader from "../ImageUploader/ImageUploader";
 import imageStorage from "../../firebase/config";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { v4 } from "uuid";
-import { async } from "@firebase/util";
 
 const defaultState = {
   campaignId: "",
@@ -33,12 +32,12 @@ const defaultState = {
   userStatus: true,
   startDate: undefined,
   endDate: undefined,
-  budget: 0,
-  bidAmount: 0,
+  budget: undefined,
+  bidAmount: undefined,
   title: "",
   description: "",
   creativePreview: "",
-  finalURL: "",
+  finalURL: undefined,
 };
 const UserStatus = [
   {
@@ -59,6 +58,33 @@ const CampaignDialog = ({ title, onClose, initialState = defaultState }) => {
   const [imageUrl, setImageUrl] = useState();
 
   // console.log("**************************************", initialState);
+  const addNewCampaign = (campaignData) => {
+    buildAPI
+      .post("/api/campaigns", campaignData)
+      .then((response) => {
+        toast.success("Campaign is created");
+        console.log(response);
+        onClose();
+      })
+      .catch((error) => {
+        toast.error("Campaign isn't created");
+        console.log(error);
+      });
+  };
+
+  const updateCampaign = (campaignData) => {
+    buildAPI
+      .put("/api/campaigns", campaignData)
+      .then((response) => {
+        toast.success("Campaign is updated");
+        console.log(response);
+        onClose();
+      })
+      .catch((error) => {
+        toast.error("Campaign isn't updated");
+        console.log(error);
+      });
+  };
 
   const fetchImageBlobToFile = async (imageUrl) => {
     try {
@@ -131,17 +157,24 @@ const CampaignDialog = ({ title, onClose, initialState = defaultState }) => {
       console.log("====================", campaignData);
       updateCampaign(campaignData);
     }
-    onClose();
   };
 
   const handleFormSubmit = async (values) => {
     if (!imageUrl) return;
     //Upload creative preview to firebase
-    let imageFile = await fetchImageBlobToFile(imageUrl);
-    let snapshot = await uploadImageFileToFirebase(imageFile);
-    getLinkImage(snapshot).then((url) => {
-      submitCampaignData(url, values);
-    });
+    if (imageUrl.includes("firebasestorage"))
+      submitCampaignData(imageUrl, values);
+    else {
+      let imageFile = await fetchImageBlobToFile(imageUrl);
+      let snapshot = await uploadImageFileToFirebase(imageFile);
+      getLinkImage(snapshot)
+        .then((url) => {
+          submitCampaignData(url, values);
+        })
+        .finally(() => {
+          onClose();
+        });
+    }
   };
 
   const handleClose = () => {
@@ -175,8 +208,6 @@ const CampaignDialog = ({ title, onClose, initialState = defaultState }) => {
           fullWidth
           maxWidth="md"
           bgcolor="white"
-          borderRadius=".5rem"
-          boxShadow="0 .7rem 1rem rgba(0, 0, 0, 0.1)"
           open={true}
           onClose={handleClose}
           scroll={"paper"}
@@ -296,7 +327,6 @@ const CampaignDialog = ({ title, onClose, initialState = defaultState }) => {
                           User status:
                         </Typography>
                         <TextField
-                          id="outlined-select-currency-native"
                           select
                           onBlur={handleBlur}
                           onChange={handleChange}
@@ -324,7 +354,10 @@ const CampaignDialog = ({ title, onClose, initialState = defaultState }) => {
                   {/* SCHEDULE */}
                   <Accordion
                     defaultExpanded
-                    sx={{ gridColumn: "span 4", marginBottom: "2rem" }}
+                    sx={{
+                      gridColumn: "span 4",
+                      marginBottom: "2rem",
+                    }}
                   >
                     <AccordionSummary
                       expandIcon={
@@ -364,7 +397,6 @@ const CampaignDialog = ({ title, onClose, initialState = defaultState }) => {
                           name="dateTime"
                           error={!!touched.dateTime && !!errors.dateTime}
                           helperText={touched.dateTime && errors.dateTime}
-                          changeEndDate={setEndDate}
                           passStartDate={setStartDate}
                           passEndDate={setEndDate}
                           initialStartDate={initialState.startDate}
@@ -708,47 +740,31 @@ const CampaignDialog = ({ title, onClose, initialState = defaultState }) => {
   );
 };
 
-const checkoutSchema = yup.object().shape({
-  campaignName: yup.string().required("required"),
+const checkoutSchema = yup.object({
+  campaignName: yup.string().required("Campaign is required"),
   budget: yup
     .number()
-    .integer("Please enter a whole number")
+    .integer("Please enter a integer")
+    .typeError("Please enter a integer")
     .positive("Budget must be greater than 0")
-    .required("Please enter budget"),
+    .required("Please enter budget")
+    .moreThan(
+      yup.ref("bidAmount"),
+      "Budget must be equal or greater than bid amount"
+    ),
   bidAmount: yup
     .number()
-    .integer("Please enter a whole number")
+    .integer("Please enter a integer")
+    .typeError("Please enter a integer")
     .positive("Budget must be greater than 0")
-    .required("Please enter budget"),
-  title: yup.string().required("required"),
-  description: yup.string().required("required"),
-  finalURL: yup.string().required("required"),
+    .required("Please enter bid amount")
+    .lessThan(
+      yup.ref("budget"),
+      "Bid amount must be equal or less than budget"
+    ),
+  title: yup.string().required("Title is required required"),
+  description: yup.string().required("Description is required"),
+  finalURL: yup.string().required("Final url is required"),
 });
-
-const addNewCampaign = (campaignData) => {
-  buildAPI
-    .post("/api/campaigns", campaignData)
-    .then((response) => {
-      toast.success("Campaign is created");
-      console.log(response);
-    })
-    .catch((error) => {
-      toast.error("Campaign isn't created");
-      console.log(error);
-    });
-};
-
-const updateCampaign = (campaignData) => {
-  buildAPI
-    .put("/api/campaigns", campaignData)
-    .then((response) => {
-      toast.success("Campaign is updated");
-      console.log(response);
-    })
-    .catch((error) => {
-      toast.error("Campaign isn't updated");
-      console.log(error);
-    });
-};
 
 export default CampaignDialog;

@@ -12,22 +12,40 @@ const dateToString = (value) => {
   return value.format("YYYY-MM-DD HH:mm");
 };
 
-const defaultStartDate = dayjs({ timeZone: "UTC" }).day();
-const defaultEndtDate = dayjs({ timeZone: "UTC" }).day();
+const defaultStartDate = "";
+const defaultEndDate = "";
 
 const DatetimePicker = ({
   initialStartDate = defaultStartDate,
   passStartDate,
-  initialEndDate = defaultEndtDate,
+  initialEndDate = defaultEndDate,
   passEndDate,
+  type,
 }) => {
-  const [startDate, setStartDate] = useState(dayjs());
-  const [endDate, setEndDate] = useState(dayjs());
+  const [startDate, setStartDate] = useState();
+  const [endDate, setEndDate] = useState();
+  const [error, setError] = useState(null);
   // console.log(initialStartDate, initialEndDate);
   const dateParse = (dateString) => {
     const formattedDate = dayjs(dateString, { timeZone: "UTC" });
     return formattedDate;
   };
+
+  const errorMessage = React.useMemo(() => {
+    switch (error) {
+      case "minDate": {
+        return "Please select a date greater than start date";
+      }
+
+      case "invalidDate": {
+        return "Your date is not valid";
+      }
+
+      default: {
+        return "";
+      }
+    }
+  }, [error]);
 
   useEffect(() => {
     if (initialStartDate) {
@@ -80,6 +98,13 @@ const DatetimePicker = ({
             onChange={handleEndDateChange}
             renderInput={(params) => <TextField {...params} />}
             format="YYYY-MM-DD HH:mm"
+            onError={(newError) => setError(newError)}
+            slotProps={{
+              textField: {
+                helperText: errorMessage,
+              },
+            }}
+            minDate={startDate}
           />
         </LocalizationProvider>
       </Box>

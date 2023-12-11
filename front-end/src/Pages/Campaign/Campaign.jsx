@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { CSVLink } from "react-csv";
 import { Box, Button, Stack, Pagination, PaginationItem } from "@mui/material";
-import Search from "../../Components/Search/Search";
+import CampaignSearch from "../../Components/Search/CampaignSearch";
 import DatetimePicker from "../../Components/DatetimePicker/DatetimePicker";
 import {
   DataGrid,
@@ -260,9 +260,6 @@ const Campaign = () => {
         console.log(error);
       });
   };
-  // useEffect(() => {
-  //   console.log(campaignData);
-  // }, [campaignData]);
 
   return (
     <>
@@ -284,7 +281,7 @@ const Campaign = () => {
 
         <Box mt={4} display="flex" justifyContent="space-between">
           {/* SEARCH BAR */}
-          <Search setSearch={setSearchText} />
+          <CampaignSearch setSearch={setSearchText} />
 
           {/* EXPORT CSV $ CREATE CAMPAIGN */}
           <Box>
