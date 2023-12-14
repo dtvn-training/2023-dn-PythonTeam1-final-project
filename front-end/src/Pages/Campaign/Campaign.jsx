@@ -1,6 +1,13 @@
 import { useState } from "react";
 import { CSVLink } from "react-csv";
-import { Box, Button, Stack, Pagination, PaginationItem } from "@mui/material";
+import {
+  Box,
+  Grid,
+  Button,
+  Stack,
+  Pagination,
+  PaginationItem,
+} from "@mui/material";
 import CampaignSearch from "../../Components/Search/CampaignSearch";
 import DatetimePicker from "../../Components/DatetimePicker/DatetimePicker";
 import {
@@ -16,6 +23,7 @@ import { useEffect } from "react";
 import buildAPI from "../../const/buildAPI";
 import CampaignDialog from "../../Components/CampaignForm/CampaignDialog";
 import { toast } from "react-toastify";
+import AlertDialog from "../../Components/AlertDialog/AlertDialog";
 
 const Campaign = () => {
   const columns = [
@@ -165,27 +173,56 @@ const Campaign = () => {
     },
   ];
 
-  const [isFormVisible, setIsFormVisible] = useState(false);
+  const [isCampaignFormOpen, setIsCampaignFormOpen] = useState(false);
+  const [isDeleteConfirmFormOpen, setIsDeleteConfirmFormOpen] = useState(false);
   const [titleCampaignForm, setTitleCampaignForm] = useState("");
   const [initialFormState, setInitialFormState] = useState({});
   const [csvData, setCSVData] = useState([]);
   const [campaignData, setCampaignData] = useState([]);
   const [filterData, setFilterData] = useState([]);
   const [searchText, setSearchText] = useState("");
+  const [idDelete, setIdDelete] = useState("");
+
+  const handleDeleteButtonClick = (value) => {
+    setIdDelete(value);
+    setIsDeleteConfirmFormOpen(true);
+  };
+
+  const handleDeleteFormClose = () => {
+    setIsDeleteConfirmFormOpen(false);
+  };
+
+  const handleAcceptDelete = () => {
+    console.log(idDelete);
+    let listIds = {
+      campaign_ids: [idDelete],
+    };
+    buildAPI
+      .patch("/api/campaigns/", listIds)
+      .then(() => {
+        toast.success("Campaign is deleted");
+      })
+      .catch(() => {
+        toast.error("Campaign isn't deleted");
+      })
+      .finally(() => {
+        fetchDataOnTable();
+      });
+  };
 
   const handleOpenCreateForm = () => {
     setInitialFormState(undefined);
     setTitleCampaignForm("Create Campaign");
-    setIsFormVisible(true);
+    setIsCampaignFormOpen(true);
   };
 
   const handleOpenEditForm = () => {
     setTitleCampaignForm("Edit Campaign");
-    setIsFormVisible(true);
+    setIsCampaignFormOpen(true);
   };
 
   const handleCloseForm = () => {
-    setIsFormVisible(false);
+    setIsCampaignFormOpen(false);
     fetchDataOnTable();
   };
 
@@ -214,24 +251,6 @@ const Campaign = () => {
     handleOpenEditForm();
   };
 
-  const handleDeleteButtonClick = (value) => {
-    console.log(value);
-    let listIds = {
-      campaign_ids: [value],
-    };
-    buildAPI
-      .patch("/api/campaigns/", listIds)
-      .then(() => {
-        toast.success("Campaign is deleted");
-      })
-      .catch(() => {
-        toast.error("Campaign isn't deleted");
-      })
-      .finally(() => {
-        fetchDataOnTable();
-      });
-  };
-
   useEffect(() => {
     fetchDataOnTable();
     setFilterData(() => [...campaignData]);
@@ -239,7 +258,7 @@ const Campaign = () => {
 
   useEffect(() => {
     let filteredData = campaignData.filter((item) =>
-      item.campaignName.includes(searchText)
+      item.campaignName.toLowerCase().includes(searchText.toLowerCase())
     );
     setFilterData(() => [...filteredData]);
   }, [campaignData, searchText]);
@@ -263,8 +282,20 @@ const Campaign = () => {
 
   return (
     <>
+      {/* DELETE CONFIRMATION FORM */}
+      {isDeleteConfirmFormOpen && (
+        <AlertDialog
+          handleAccept={handleAcceptDelete}
+          title="Confirmation"
+          description="Please confirm that you want to delete this campaign."
+          acceptText="Delete"
+          cancelText="Cancle"
+          handleClose={handleDeleteFormClose}
+        />
+      )}
+
       {/* CAMPAIGN FORM */}
-      {isFormVisible && (
+      {isCampaignFormOpen && (
         <CampaignDialog
           title={titleCampaignForm}
           onClose={handleCloseForm}
@@ -275,22 +306,46 @@ const Campaign = () => {
       {/* CAMPAIGN VIEW */}
       <Box sx={{ px: "4%", pt: "4%", width: "100%" }}>
         {/* DATE FIELD */}
-        <Box width="58rem">
+        <Box width="50%">
           <DatetimePicker />
         </Box>
 
-        <Box mt={4} display="flex" justifyContent="space-between">
+        <Grid container spacing={4} >
           {/* SEARCH BAR */}
-          <CampaignSearch setSearch={setSearchText} />
+
+          <Grid item md={6} mt={1}>
+            <CampaignSearch setSearch={setSearchText} />
+          </Grid>
 
           {/* EXPORT CSV $ CREATE CAMPAIGN */}
-          <Box>
+          <Grid
+            item
+            md={6}
+            display="flex"
+            mt={1}
+            sx={{ flexDirection: "row-reverse" }}
+          >
+            <Button
+              variant="contained"
+              style={{
+                height: "4rem",
+                width: "18rem",
+                fontSize: "1.4rem",
+                textTransform: "none",
+                backgroundColor: "#468faf",
+              }}
+              onClick={handleOpenCreateForm}
+            >
+              Create Campaign
+            </Button>
+
             <CSVLink data={csvData} filename={"campaign-data.csv"}>
               <Button
                 variant="contained"
                 style={{
-                  width: "18rem",
-                  fontSize: "1.6rem",
+                height: "4rem",
+                width: "18rem",
+                  fontSize: "1.4rem",
                   textTransform: "none",
                   backgroundColor: "#468faf",
                   marginRight: "2rem",
@@ -302,21 +357,8 @@ const Campaign = () => {
                 Export CSV
               </Button>
             </CSVLink>
-
-            <Button
-              variant="contained"
-              style={{
-                width: "18rem",
-                fontSize: "1.6rem",
-                textTransform: "none",
-                backgroundColor: "#468faf",
-              }}
-              onClick={handleOpenCreateForm}
-            >
-              Create Campaign
-            </Button>
-          </Box>
-        </Box>
+          </Grid>
+        </Grid>
 
         {/* TABLE DASHBOARD */}
         <Box sx={{ mt: 4 }}>

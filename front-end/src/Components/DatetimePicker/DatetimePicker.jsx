@@ -12,8 +12,8 @@ const dateToString = (value) => {
   return value.format("YYYY-MM-DD HH:mm");
 };
 
-const defaultStartDate = "";
-const defaultEndDate = "";
+const defaultStartDate = undefined;
+const defaultEndDate = undefined;
 
 const DatetimePicker = ({
   initialStartDate = defaultStartDate,
@@ -78,10 +78,10 @@ const DatetimePicker = ({
     <Box className="datetime-container">
       <Box className="datetime-component">
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <span>Start time:</span>
+          <span className="date-range">Start time:</span>
           <DatePicker
             className="customDatePicker"
-            value={startDate}
+            value={startDate ? startDate : null}
             onChange={handleStartDateChange}
             renderInput={(params) => <TextField {...params} />}
             format="YYYY-MM-DD HH:mm"
@@ -91,10 +91,10 @@ const DatetimePicker = ({
 
       <Box className="datetime-component">
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <span>End time:</span>
+          <span className="date-range"> End time:</span>
           <DatePicker
             className="customDatePicker"
-            value={endDate}
+            value={endDate ? endDate : null}
             onChange={handleEndDateChange}
             renderInput={(params) => <TextField {...params} />}
             format="YYYY-MM-DD HH:mm"

@@ -2,12 +2,13 @@ import {
   Box,
   Typography,
   TextField,
-  Button,
+  // Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
 } from "@mui/material";
+import LoadingButton from "@mui/lab/LoadingButton";
 import ClearIcon from "@mui/icons-material/Clear";
 import React, { useState } from "react";
 import Accordion from "@mui/material/Accordion";
@@ -56,6 +57,7 @@ const CampaignDialog = ({ title, onClose, initialState = defaultState }) => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [imageUrl, setImageUrl] = useState();
+  const [loading, setLoading] = useState(false);
 
   // console.log("**************************************", initialState);
   const addNewCampaign = (campaignData) => {
@@ -160,6 +162,7 @@ const CampaignDialog = ({ title, onClose, initialState = defaultState }) => {
   };
 
   const handleFormSubmit = async (values) => {
+    setLoading(true);
     if (!imageUrl) return;
     //Upload creative preview to firebase
     if (imageUrl.includes("firebasestorage"))
@@ -172,6 +175,7 @@ const CampaignDialog = ({ title, onClose, initialState = defaultState }) => {
           submitCampaignData(url, values);
         })
         .finally(() => {
+          setLoading(false);
           onClose();
         });
     }
@@ -711,17 +715,18 @@ const CampaignDialog = ({ title, onClose, initialState = defaultState }) => {
             </Box>
           </DialogContent>
           <DialogActions>
-            <Button
+            <LoadingButton
               onClick={handleClose}
               sx={{
                 marginLeft: "1.5rem",
                 fontSize: "1.2rem",
                 width: "10rem",
               }}
+              loading={loading}
             >
               Cancel
-            </Button>
-            <Button
+            </LoadingButton>
+            <LoadingButton
               variant="contained"
               sx={{
                 marginLeft: "1.5rem",
@@ -730,9 +735,10 @@ const CampaignDialog = ({ title, onClose, initialState = defaultState }) => {
                 width: "10rem",
               }}
               onClick={handleSubmit}
+              loading={loading}
             >
               Save
-            </Button>
+            </LoadingButton>
           </DialogActions>
         </Dialog>
       )}
@@ -741,7 +747,10 @@ const CampaignDialog = ({ title, onClose, initialState = defaultState }) => {
 };
 
 const checkoutSchema = yup.object({
-  campaignName: yup.string().required("Campaign is required"),
+  campaignName: yup
+    .string()
+    .required("Campaign is required")
+    .max(200, "Name is not more than 200 characters"),
   budget: yup
     .number()
     .integer("Please enter a integer")
@@ -762,8 +771,14 @@ const checkoutSchema = yup.object({
       yup.ref("budget"),
       "Bid amount must be equal or less than budget"
     ),
-  title: yup.string().required("Title is required required"),
-  description: yup.string().required("Description is required"),
+  title: yup
+    .string()
+    .required("Title is required required")
+    .max(200, "Title is not more than 200 characters"),
+  description: yup
+    .string()
+    .required("Description is required")
+    .max(500, "Name is not more than 200 characters"),
   finalURL: yup.string().required("Final url is required"),
 });
 

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Box, IconButton, Avatar } from "@mui/material";
+import { Box, IconButton, Avatar, useMediaQuery } from "@mui/material";
 import { Sidebar, Menu, MenuItem } from "react-pro-sidebar";
 import { Link, useLocation } from "react-router-dom";
 import ViewSidebarOutlinedIcon from "@mui/icons-material/ViewSidebarOutlined";
@@ -31,6 +31,16 @@ const Mysidebar = () => {
   const [selected, setSelected] = useState("Dashboard");
   const [userName, setUserName] = useState("");
   const [userAvatar, setuserAvatar] = useState("");
+
+  const isSmallScreen = useMediaQuery("(max-width:1100px)");
+
+  useEffect(() => {
+    if (isSmallScreen) {
+      setIsCollapsed(true);
+    } else {
+      setIsCollapsed(false);
+    }
+  }, [isSmallScreen]);
 
   useEffect(() => {
     const fetchUserData = async () => {
