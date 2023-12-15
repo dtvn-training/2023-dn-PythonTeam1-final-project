@@ -5,23 +5,14 @@ import { Link } from 'react-router-dom';
 import { Dialog } from 'primereact/dialog';
 import { Button } from 'primereact/button';
 import './topbar.scss'
-import Avatar from 'react-avatar-edit'
-import { toast } from 'react-toastify';
+import { storage } from '../../const/firebase';
+import { ref, uploadBytes } from 'firebase/storage';
 import buildAPI from '../../const/buildAPI';
 
 const Topbar = () => {
     const [dialog, setDialog] = useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
-    const [imgCrop, setimgCrop] = useState(false);
-    const [storeImage, setStoreImage] = useState([])
-
-    const onClose = (view) => {
-        setimgCrop(view);
-    }
-
-    const onCrop = () => {
-        setimgCrop(null)
-    }
+    const [img, setimg] = useState('')
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -36,22 +27,19 @@ const Topbar = () => {
         handleClose();
     };
 
+    const handleLogout = () => {
+        if (window.confirm("Are you sure you want to logout?"))
+            window.location.href = "/";
+    };
     const saveImage = async () => {
         try {
-            setStoreImage([...storeImage, { imgCrop }]);
-            console.log(setStoreImage)
-            const formData = new FormData();
-            formData.append('file', imgCrop);
-            console.log("data form", [...formData.entries()]);
-            const response = await buildAPI.post('/api/account/upload-avatar', formData);
-            console.log("response", response.data);
-            setDialog(false);
-            toast.success("Upload image success")
+            const response = await buildAPI.get("/api/account/get_user_info");
+            const name = response.data.name;
+            const imageRef = ref(storage, `files/${name}/avatar`);
+            await uploadBytes(imageRef, img);
         } catch (error) {
-            toast.error("Can not upload image")
-            console.error("Error:", error.response.data);
         }
-
+        setDialog(false)
     };
 
     return (
@@ -97,12 +85,15 @@ const Topbar = () => {
                 <MenuItem style={{ fontSize: '1.4rem', fontWeight: 'bold' }} onClick={handleChangeAvatar}>
                     Change Avatar
                 </MenuItem>
+                <MenuItem onClick={handleLogout} style={{ fontSize: '1.4rem', fontWeight: 'bold' }}>
+                    LogOut
+                </MenuItem>
             </Popover>
 
             <Dialog className='dialog customHeader' header='Update Avatar'
                 visible={dialog} onHide={() => setDialog(false)}>
                 <div className="dialog-components">
-                    <Avatar width={400} height={350} onClose={onClose} onCrop={onCrop} />
+                    <input type="file" onChange={(e) => setimg(e.target.files[0])} />
                     <Button label='Save' onClick={saveImage} className='customLabel'></Button>
                 </div>
             </Dialog>
