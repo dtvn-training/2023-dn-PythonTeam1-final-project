@@ -7,7 +7,7 @@ import CampaignOutlinedIcon from "@mui/icons-material/CampaignOutlined";
 import SupervisorAccountOutlinedIcon from "@mui/icons-material/SupervisorAccountOutlined";
 import "./mysidebar.scss";
 import buildAPI from "../../const/buildAPI";
-import { storage } from "../../const/firebase";
+import storage from "../../firebase/config";
 import { getDownloadURL, ref } from "firebase/storage";
 
 // MENU ITEM FORM

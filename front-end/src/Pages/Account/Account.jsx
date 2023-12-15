@@ -7,7 +7,6 @@ import AccountForm from "../../Components/AccountForm/AccountForm";
 import buildAPI from "../../const/buildAPI";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
 import {
   MainContainer,
   HeaderContainer,
@@ -18,6 +17,7 @@ import {
   EditButton,
   DeleteButton,
 } from "./account.js";
+import AlertDialog from "../../Components/AlertDialog/AlertDialog.jsx";
 
 const Account = () => {
   const [accountData, setAccountData] = useState([]);
@@ -25,6 +25,8 @@ const Account = () => {
   const [isEditFormVisible, setIsEditFormVisible] = useState(false);
   const [csvData, setCSVData] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
+  const [deleteRow, setDeleteRow] = useState();
+  const [isDeleteConfirmFormOpen, setIsDeleteConfirmFormOpen] = useState(false);
 
   const handleOpenEditForm = (row) => {
     setSelectedRow(row);
@@ -167,17 +169,24 @@ const Account = () => {
   };
 
   const handleDeleteClick = (row) => {
-    if (window.confirm("Are you sure you want to delete this account?")) {
-      buildAPI
-        .patch(`/api/account/delete/${row.user_id}`)
-        .then((response) => {
-          toast.success("User deleted successfully:", response.data);
-          updateUserData();
-        })
-        .catch((error) => {
-          toast.error("Error deleting user:", error);
-        });
-    }
+    setDeleteRow(row);
+    setIsDeleteConfirmFormOpen(true);
+  };
+
+  const handleAcceptDelete = () => {
+    buildAPI
+      .patch(`/api/account/delete/${deleteRow.user_id}`)
+      .then((response) => {
+        toast.success("User deleted successfully:", response.data);
+        updateUserData();
+      })
+      .catch((error) => {
+        toast.error("Error deleting user:", error);
+      });
+  };
+
+  const handleDeleteFormClose = () => {
+    setIsDeleteConfirmFormOpen(false);
   };
 
   const columns = [
@@ -249,6 +258,16 @@ const Account = () => {
 
   return (
     <MainContainer>
+      {isDeleteConfirmFormOpen && (
+        <AlertDialog
+          handleAccept={handleAcceptDelete}
+          title="Confirmation"
+          description="Please confirm that you want to delete this campaign."
+          acceptText="Delete"
+          cancelText="Cancle"
+          handleClose={handleDeleteFormClose}
+        />
+      )}
       <HeaderContainer>
         {/* SEARCH BAR */}
         <Search data={csvData} onSearch={handleSearch} />
@@ -282,7 +301,6 @@ const Account = () => {
               }}
             />
           )}
-          <ToastContainer />
         </Box>
       </HeaderContainer>
 
