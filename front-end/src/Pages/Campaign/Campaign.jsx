@@ -17,7 +17,6 @@ import {
   useGridApiContext,
   useGridSelector,
 } from "@mui/x-data-grid";
-import { mockData } from "../../data/mockData";
 import TripOriginIcon from "@mui/icons-material/TripOrigin";
 import { useEffect } from "react";
 import buildAPI from "../../const/buildAPI";
@@ -28,11 +27,40 @@ import AlertDialog from "../../Components/AlertDialog/AlertDialog";
 const Campaign = () => {
   const columns = [
     {
+      field: "creative",
+      headerName: "Image",
+      headerAlign: "center",
+      align: "left",
+      flex: 1,
+      renderCell: ({ value }) => (
+        <Box
+          component="div"
+          style={{
+            fontWeight: "bold",
+            fontSize: "1.4rem",
+          }}
+        >
+          <img
+            src={value.imgPreview
+            }
+            alt="creative-image"
+            style={{
+              maxWidth: '100%', 
+              maxHeight: '100%',
+              width: '12em', 
+              height: '3em', 
+              objectFit: 'cover', 
+            }}
+          />
+        </Box>
+      ),
+    },
+    {
       field: "campaignName",
       headerName: "Campaign Name",
       headerAlign: "center",
       align: "left",
-      flex: 2,
+      flex: 1,
 
       renderCell: ({ value }) => (
         <Box
@@ -268,7 +296,7 @@ const Campaign = () => {
       .get("api/campaigns/all")
       .then((response) => {
         if (response.status === 200) {
-          // console.log(response.data["campaigns"]);
+          console.log(response.data["campaigns"]);
           setCampaignData(() => [...response.data["campaigns"]]);
         } else {
           setCampaignData(() => []);
@@ -310,7 +338,7 @@ const Campaign = () => {
           <DatetimePicker />
         </Box>
 
-        <Grid container spacing={4} >
+        <Grid container spacing={4}>
           {/* SEARCH BAR */}
 
           <Grid item md={6} mt={1}>
@@ -343,8 +371,8 @@ const Campaign = () => {
               <Button
                 variant="contained"
                 style={{
-                height: "4rem",
-                width: "15rem",
+                  height: "4rem",
+                  width: "15rem",
                   fontSize: "1.4rem",
                   textTransform: "none",
                   backgroundColor: "#468faf",
