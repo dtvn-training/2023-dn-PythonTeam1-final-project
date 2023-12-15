@@ -329,7 +329,7 @@ const Campaign = () => {
               variant="contained"
               style={{
                 height: "4rem",
-                width: "18rem",
+                width: "15rem",
                 fontSize: "1.4rem",
                 textTransform: "none",
                 backgroundColor: "#468faf",
@@ -344,7 +344,7 @@ const Campaign = () => {
                 variant="contained"
                 style={{
                 height: "4rem",
-                width: "18rem",
+                width: "15rem",
                   fontSize: "1.4rem",
                   textTransform: "none",
                   backgroundColor: "#468faf",
