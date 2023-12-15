@@ -3,7 +3,7 @@ import axios from "axios";
 // config
 const buildAPI =
     axios.create({
-        baseURL: 'http://127.0.0.1:8000/'
+        baseURL: 'https://everest-api-e7x5.onrender.com/'
     })
 buildAPI.interceptors.request.use(config => (
     {
