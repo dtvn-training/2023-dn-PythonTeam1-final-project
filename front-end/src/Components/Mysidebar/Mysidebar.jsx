@@ -62,7 +62,8 @@ const Mysidebar = () => {
     }, [userName]);
 
   return (
-    <Sidebar collapsed={isCollapsed} backgroundColor="#468faf" width="30rem">
+    <Sidebar collapsed={isCollapsed} backgroundColor="#468faf" width="100%" height="100%"
+    collapsedWidth="100%">
       <Menu iconShape="square">
         {/* LOGO AND MENU ICON */}
         <MenuItem
@@ -91,7 +92,7 @@ const Mysidebar = () => {
                             <Avatar alt="user-image"
                                 // src={"../assets/Images/user.jpg"} 
                                 src={avatar}
-                                style={{ width: "20rem", height: "20rem" }} />
+                                style={{ width: "15em", height: "15em" }} />
                         </Box>
 
                         <Box className='box-username'>
@@ -113,7 +114,7 @@ const Mysidebar = () => {
                     /> */}
 
           <Item
-            title="Campaign"
+            title= {!isCollapsed?"Campaign" : ""}
             to="/"
             icon={<CampaignOutlinedIcon style={{ fontSize: "2.6rem" }} />}
             selected={selected}
@@ -121,7 +122,7 @@ const Mysidebar = () => {
           />
 
           <Item
-            title="Account"
+            title={!isCollapsed?"Account" : ""}
             to="/account"
             icon={
               <SupervisorAccountOutlinedIcon style={{ fontSize: "2.6rem" }} />

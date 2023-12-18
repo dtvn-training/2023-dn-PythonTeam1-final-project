@@ -167,10 +167,11 @@ const Campaign = () => {
       headerName: "Action",
       headerAlign: "center",
       align: "center",
-      width: 100,
+      flex:1,
+      minWidth:100,
       sortable: false,
       renderCell: ({ value }) => (
-        <Stack direction="column" spacing={1} my={1}>
+        <Stack direction="column" spacing={1} my={1} >
           <Button
             variant="contained"
             onClick={() => handleEditButtonClick(value)}
@@ -382,9 +383,9 @@ const Campaign = () => {
                 border: "none",
               },
               "& .MuiDataGrid-cell": {
-                border: "1px solid #000",
+                border: "1px solid #000"
               },
-              "& .MuiDataGrid-columnHeader": {
+              ".MuiDataGrid-columnHeader": {
                 backgroundColor: "#468faf",
                 border: "1px solid #000",
                 color: "white",

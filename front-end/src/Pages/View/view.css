@@ -14,21 +14,38 @@ body {
     font-size: 1.6rem;
 }
 
-#root,
-.view,
-.view-container,
-.view-content {
-    height: 100%;
+.view-banner {
+    width: 100%;
+}
+
+.view {
     width: 100%;
     font-family: "Source Sans 3", sans-serif;
 }
 
 .view-container {
     display: flex;
-    position: relative;
+    width: 100%;
     height: 100vh;
 }
 
+.view-sidebar {
+    max-width: 30%;
+    min-width: 5%;
+    height: 100%;
+    background-color: #468faf;
+}
+
 .view-content {
+    display: flex;
+    width: 100%;
+    max-width: 95%;
+    min-width: 70%;
+    flex-direction: column;
     background-color: #fff;
+}
+
+.main-container {
+    display: flex;
+    width: 100%;
 }
