@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Box } from "@mui/material";
 import * as React from "react";
 import TextField from "@mui/material/TextField";
@@ -6,7 +6,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import "./datetimepicker.scss";
 import dayjs from "dayjs";
-import { useEffect } from "react";
+import PropTypes from 'prop-types';
 
 const dateToString = (value) => {
   return value.format("YYYY-MM-DD HH:mm");
@@ -15,17 +15,16 @@ const dateToString = (value) => {
 const defaultStartDate = undefined;
 const defaultEndDate = undefined;
 
+
 const DatetimePicker = ({
   initialStartDate = defaultStartDate,
   passStartDate,
   initialEndDate = defaultEndDate,
   passEndDate,
-  type,
 }) => {
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
   const [error, setError] = useState(null);
-  // console.log(initialStartDate, initialEndDate);
   const dateParse = (dateString) => {
     const formattedDate = dayjs(dateString, { timeZone: "UTC" });
     return formattedDate;
@@ -81,7 +80,7 @@ const DatetimePicker = ({
           <span className="date-range">Start time:</span>
           <DatePicker
             className="customDatePicker"
-            value={startDate ? startDate : null}
+            value={startDate}
             onChange={handleStartDateChange}
             renderInput={(params) => <TextField {...params} />}
             format="YYYY-MM-DD HH:mm"
@@ -94,7 +93,7 @@ const DatetimePicker = ({
           <span className="date-range"> End time:</span>
           <DatePicker
             className="customDatePicker"
-            value={endDate ? endDate : null}
+            value={endDate}
             onChange={handleEndDateChange}
             renderInput={(params) => <TextField {...params} />}
             format="YYYY-MM-DD HH:mm"
@@ -110,6 +109,14 @@ const DatetimePicker = ({
       </Box>
     </Box>
   );
+};
+
+
+DatetimePicker.propTypes = {
+  passStartDate: PropTypes.func.isRequired,
+  passEndDate: PropTypes.func.isRequired,
+  initialStartDate: PropTypes.any,
+  initialEndDate: PropTypes.any,
 };
 
 export default DatetimePicker;

@@ -7,6 +7,7 @@ import {
   Stack,
   Pagination,
   PaginationItem,
+  Typography,
 } from "@mui/material";
 import CampaignSearch from "../../Components/Search/CampaignSearch";
 import DatetimePicker from "../../Components/DatetimePicker/DatetimePicker";
@@ -26,13 +27,21 @@ import AlertDialog from "../../Components/AlertDialog/AlertDialog";
 const Campaign = () => {
   const columns = [
     {
-      field: "creative",
-      headerName: "Image",
+      field: "campaignNameAndCreativePreview",
+      headerName: "Campaign Name",
       headerAlign: "center",
       align: "left",
-      flex: 1,
+      width: 500,
+      valueGetter: (params) => {
+        return {
+          campaignName: params.row.campaignName,
+          creativePreview: params.row.creative.imgPreview,
+        };
+      },
+
       renderCell: ({ value }) => (
         <Box
+          display={"flex"}
           component="div"
           style={{
             fontWeight: "bold",
@@ -40,35 +49,28 @@ const Campaign = () => {
           }}
         >
           <img
-            src={value.imgPreview}
-            alt="creative-preview"
+            display={"block"}
+            src={value.creativePreview}
+            alt="img-preview"
             style={{
-              maxWidth: '100%', 
-              maxHeight: '100%',
-              width: '12em', 
-              height: '3em', 
-              objectFit: 'cover', 
+              maxHeight: "100%",
+              width: "150px",
+              height: "3em",
+              marginRight: "20px",
+              objectFit: "cover",
             }}
           />
-        </Box>
-      ),
-    },
-    {
-      field: "campaignName",
-      headerName: "Campaign Name",
-      headerAlign: "center",
-      align: "left",
-      flex: 1,
-
-      renderCell: ({ value }) => (
-        <Box
-          component="div"
-          style={{
-            fontWeight: "bold",
-            fontSize: "1.4rem",
-          }}
-        >
-          {value}
+          <div
+            style={{
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              width: "300px",
+            }}
+          >
+            <Typography noWrap fontSize={"1.4rem"} fontWeight={"bold"}>
+              {value.campaignName}
+            </Typography>
+          </div>
         </Box>
       ),
     },
@@ -77,7 +79,7 @@ const Campaign = () => {
       headerName: "Status",
       headerAlign: "center",
       align: "center",
-      flex: 1,
+      width: 100,
       renderCell: ({ row: { status } }) => {
         return (
           <Box display="flex" justifyContent="center">
@@ -95,7 +97,7 @@ const Campaign = () => {
       type: "number",
       headerAlign: "center",
       align: "center",
-      flex: 1,
+      width: 170,
       renderCell: ({ value }) => (
         <div
           style={{
@@ -116,7 +118,7 @@ const Campaign = () => {
       type: "number",
       headerAlign: "center",
       align: "center",
-      flex: 1,
+      width: 170,
       renderCell: ({ value }) => (
         <div
           style={{
@@ -137,7 +139,7 @@ const Campaign = () => {
       type: "number",
       headerAlign: "center",
       align: "center",
-      flex: 1,
+      width: 150,
       renderCell: ({ value }) => (
         <div
           style={{
@@ -157,7 +159,7 @@ const Campaign = () => {
       headerName: "Start Date",
       headerAlign: "center",
       align: "center",
-      flex: 1.5,
+      width: 150,
       renderCell: ({ value }) => (
         <div style={{ fontWeight: "bold", fontSize: "1.4rem" }}>{value}</div>
       ),
@@ -167,7 +169,7 @@ const Campaign = () => {
       headerName: "End Date",
       headerAlign: "center",
       align: "center",
-      flex: 1.5,
+      width: 150,
       renderCell: ({ value }) => (
         <div style={{ fontWeight: "bold", fontSize: "1.4rem" }}>{value}</div>
       ),
@@ -177,7 +179,7 @@ const Campaign = () => {
       headerName: "Action",
       headerAlign: "center",
       align: "center",
-      flex: 1,
+      width: 100,
       sortable: false,
       renderCell: ({ value }) => (
         <Stack direction="column" spacing={1} my={1}>

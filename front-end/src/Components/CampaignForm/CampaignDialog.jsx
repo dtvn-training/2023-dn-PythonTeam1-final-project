@@ -59,7 +59,6 @@ const CampaignDialog = ({ title, onClose, initialState = defaultState }) => {
   const [imageUrl, setImageUrl] = useState();
   const [loading, setLoading] = useState(false);
 
-  // console.log("**************************************", initialState);
   const addNewCampaign = (campaignData) => {
     buildAPI
       .post("/api/campaigns", campaignData)
