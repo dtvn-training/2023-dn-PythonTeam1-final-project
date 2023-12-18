@@ -8,13 +8,11 @@ import {
   Typography,
 } from "@mui/material";
 import { ClearIcon } from "@mui/x-date-pickers";
-import "./PictureCropForm.scss";
 import "react-image-crop/src/ReactCrop.scss";
 import { useRef, useState } from "react";
-import ReactCrop, { centerCrop, makeAspectCrop, Crop } from "react-image-crop";
+import ReactCrop, { centerCrop, makeAspectCrop} from "react-image-crop";
 
 const PictureCropForm = ({ handleClose, imageSrc, setImageCrop }) => {
-  // const [open, setOpen] = useState(false);
   const [crop, setCrop] = useState();
   const [isHovered, setIsHovered] = useState(false);
 

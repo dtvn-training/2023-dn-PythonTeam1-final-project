@@ -12,7 +12,7 @@ const Banner = () => {
                 Banner 2
             </Typography>
         </Box>
-    );
+    );  
 };
 
 export default Banner;

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CSVLink } from "react-csv";
 import {
   Box,
@@ -18,7 +18,6 @@ import {
   useGridSelector,
 } from "@mui/x-data-grid";
 import TripOriginIcon from "@mui/icons-material/TripOrigin";
-import { useEffect } from "react";
 import buildAPI from "../../const/buildAPI";
 import CampaignDialog from "../../Components/CampaignForm/CampaignDialog";
 import { toast } from "react-toastify";
@@ -41,9 +40,8 @@ const Campaign = () => {
           }}
         >
           <img
-            src={value.imgPreview
-            }
-            alt="creative-image"
+            src={value.imgPreview}
+            alt="creative-preview"
             style={{
               maxWidth: '100%', 
               maxHeight: '100%',
@@ -258,7 +256,6 @@ const Campaign = () => {
     let currentCampaignData = campaignData.find(
       (campaign) => campaign.campaignId === value
     );
-    // console.log("=====", currentCampaignData);
 
     let currentCampaignDataParse = {
       campaignId: value,
@@ -273,9 +270,7 @@ const Campaign = () => {
       creativePreview: currentCampaignData.creative.imgPreview,
       finalURL: currentCampaignData.creative.url,
     };
-    // console.log(currentCampaignDataParse);
     setInitialFormState(currentCampaignDataParse);
-    // console.log("+++", initialFormState);
     handleOpenEditForm();
   };
 
