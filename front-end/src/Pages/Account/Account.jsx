@@ -18,6 +18,7 @@ import {
   DeleteButton,
 } from "./account.js";
 import AlertDialog from "../../Components/AlertDialog/AlertDialog.jsx";
+import CustomPagination from "../../Components/CustomPagination/CustomPagination";
 
 const Account = () => {
   const [accountData, setAccountData] = useState([]);
@@ -316,7 +317,11 @@ const Account = () => {
                   pageSize: 3,
                 },
               },
-            }}
+            }
+          }
+          slots={{
+            pagination: CustomPagination,
+          }}
             disableRowSelectionOnClick
           />
         </StyledBox>

@@ -66,14 +66,14 @@ export const DeleteButton = styled.button`
 `;
 
 export const dataGridStyles = {
-    width: '100%',
+    width: "100%",
     "& .MuiDataGrid-root": {
         border: "none",
     },
     "& .MuiDataGrid-cell": {
         border: "1px solid #000",
     },
-    "& .MuiDataGrid-columnHeaders": {
+    "& .MuiDataGrid-columnHeader": {
         backgroundColor: "#468faf",
         border: "1px solid #000",
         color: "white",
@@ -92,6 +92,14 @@ export const dataGridStyles = {
         fontSize: "1.5rem",
         fontWeight: 500,
         color: "#468faf",
+    },
+    ".MuiDataGrid-cell": {
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        outline: 0,
+    },
+    ".MuiDataGrid-cell:focus": {
+        outline: 0,
     },
 };
 

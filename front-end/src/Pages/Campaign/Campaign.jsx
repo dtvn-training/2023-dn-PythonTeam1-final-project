@@ -1,28 +1,16 @@
 import { useState, useEffect } from "react";
 import { CSVLink } from "react-csv";
-import {
-  Box,
-  Grid,
-  Button,
-  Stack,
-  Pagination,
-  PaginationItem,
-  Typography,
-} from "@mui/material";
+import { Box, Grid, Button, Stack, Typography } from "@mui/material";
 import CampaignSearch from "../../Components/Search/CampaignSearch";
 import DatetimePicker from "../../Components/DatetimePicker/DatetimePicker";
-import {
-  DataGrid,
-  gridPageCountSelector,
-  gridPageSelector,
-  useGridApiContext,
-  useGridSelector,
-} from "@mui/x-data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 import TripOriginIcon from "@mui/icons-material/TripOrigin";
 import buildAPI from "../../const/buildAPI";
 import CampaignDialog from "../../Components/CampaignForm/CampaignDialog";
 import { toast } from "react-toastify";
 import AlertDialog from "../../Components/AlertDialog/AlertDialog";
+import CustomPagination from "../../Components/CustomPagination/CustomPagination";
+
 
 const Campaign = () => {
   const columns = [
@@ -417,8 +405,6 @@ const Campaign = () => {
                 color: "#468faf",
               },
               ".MuiDataGrid-cell": {
-                overflow: "hidden",
-                textOverflow: "ellipsis",
                 outline: 0,
               },
               ".MuiDataGrid-cell:focus": {
@@ -452,22 +438,3 @@ const Campaign = () => {
 };
 
 export default Campaign;
-
-function CustomPagination() {
-  const apiRef = useGridApiContext();
-  const page = useGridSelector(apiRef, gridPageSelector);
-  const pageCount = useGridSelector(apiRef, gridPageCountSelector);
-
-  return (
-    <Pagination
-      color="primary"
-      variant="outlined"
-      shape="rounded"
-      page={page + 1}
-      count={pageCount}
-      // @ts-expect-error
-      renderItem={(props2) => <PaginationItem {...props2} disableRipple />}
-      onChange={(event, value) => apiRef.current.setPage(value - 1)}
-    />
-  );
-}
