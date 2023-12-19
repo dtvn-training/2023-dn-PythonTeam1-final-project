@@ -117,8 +117,9 @@ def delete_user(user_id: str, token: str, db: Session):
 
 def get_current_username(token: str, db: Session):
     user = auth.get_current_user(token, db)
-    user.avatar = user.avatar.replace("\\", "/")
-    return {"name": user.first_name + " " + user.last_name, "user_id": user.user_id, "avatar": user.avatar}
+    name = user.first_name + " " + user.last_name
+    email = user.email
+    return {"name": name, "email": email}
 
 
 def save_avatar(token: str, file: UploadFile, db: Session):

@@ -3,7 +3,7 @@ import time
 from fastapi.middleware.cors import CORSMiddleware
 from .models import user_model, role_model, campaign_model, creative_model
 from .connectDB.database import engine
-from .routers import user_router, auth_router, campaign_router
+from .routers import user_router, auth_router, campaign_router, banner_router
 
 role_model.Base.metadata.create_all(bind=engine)
 user_model.Base.metadata.create_all(bind=engine)
@@ -31,3 +31,4 @@ app.add_middleware(
 app.include_router(user_router.router)
 app.include_router(auth_router.router)
 app.include_router(campaign_router.router)
+app.include_router(banner_router.router)
