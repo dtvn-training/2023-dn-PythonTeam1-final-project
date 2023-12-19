@@ -26,7 +26,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
     allow_credentials=True,
-    allow_origins=["http://localhost:3000"])
+    allow_origins=["*"])
 
 app.include_router(user_router.router)
 app.include_router(auth_router.router)

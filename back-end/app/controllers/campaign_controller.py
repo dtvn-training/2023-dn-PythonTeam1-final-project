@@ -1,9 +1,5 @@
-from math import ceil
-from datetime import datetime
-from fastapi import HTTPException, status
-from sqlalchemy.orm import Session, load_only
+from sqlalchemy.orm import Session
 from ..schemas import campaign_schemas
-from ..models import campaign_model, creative_model
 from ..controllers import auth_controller as auth
 from ..services import campaign_services
 
