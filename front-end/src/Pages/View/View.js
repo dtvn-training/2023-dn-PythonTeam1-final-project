@@ -1,6 +1,6 @@
 import Banner from "../../Components/Banner/Banner";
-import TopBar from "../../Components/Topbar/TopBar";
-import MySideBar from "../../Components/Mysidebar/MySideBar";
+import TopBar from "../../Components/TopBar/TopBar";
+import MySideBar from "../../Components/MySideBar/MySideBar";
 import './view.css';
 import { Box } from "@mui/material";
 import PropTypes from 'prop-types';
