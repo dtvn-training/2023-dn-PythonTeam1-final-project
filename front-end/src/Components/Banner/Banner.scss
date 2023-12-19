@@ -1,8 +1,15 @@
-.banner {
+.slider {
     display: flex;
     justify-content: space-between;
     align-items: center;
     height: 100%;
     width: 100%;
-    background: #fff;
+}
+
+.imageSlider {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+    width: 100%;
 }
