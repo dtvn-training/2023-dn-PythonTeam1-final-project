@@ -13,6 +13,9 @@ def get_banner(token: str, db: Session):
             status_code=status.HTTP_403_FORBIDDEN,
             detail="User not found")
 
+    first_status = True
+    second_status = True
+
     while True:
         try:
             banners = (
@@ -26,7 +29,7 @@ def get_banner(token: str, db: Session):
             if len(banners) != 2:
                 raise HTTPException(
                     status_code=status.HTTP_404_NOT_FOUND,
-                    detail="Không đủ ảnh"
+                    detail="Find not found"
                 )
 
             first_campaign, second_campaign = [
@@ -56,6 +59,11 @@ def get_banner(token: str, db: Session):
                     }
                     for creative in creatives
                 ]
+            else:
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail="Find not found"
+                )
 
             first_used_amount = first_campaign["used_amount"] + \
                 first_campaign["bid_amount"]
