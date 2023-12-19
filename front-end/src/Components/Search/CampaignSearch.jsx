@@ -2,13 +2,14 @@ import { useState } from "react";
 import { Box } from "@mui/material";
 import InputBase from "@mui/material/InputBase";
 import * as React from "react";
+import PropTypes from "prop-types";
 
-const CampaignSearch = (props) => {
+const CampaignSearch = ({ setSearch }) => {
   const [searchText, setSearchText] = useState("");
 
   const handleSearchChange = (e) => {
-    if (props.setSearch) {
-      props.setSearch(e.target.value);
+    if (setSearch) {
+      setSearch(e.target.value);
     }
     setSearchText(e.target.value);
   };
@@ -40,6 +41,10 @@ const CampaignSearch = (props) => {
       />
     </Box>
   );
+};
+
+CampaignSearch.propTypes = {
+  setSearch: PropTypes.func.isRequired,
 };
 
 export default CampaignSearch;

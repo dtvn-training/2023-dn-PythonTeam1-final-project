@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./imageUploader.scss";
 import PictureCropForm from "../PictureCropForm/PictureCropForm";
 import { Button } from "@mui/material";
+import PropTypes from 'prop-types';
 
 const defaultImagePreview = undefined;
 
@@ -58,11 +59,9 @@ const ImageUploader = ({
         />
       </label>
       {imagePreview && (
-        <>
           <div className="image-preview">
             <img src={imagePreview} alt="Preview" className="preview-image" />
           </div>
-        </>
       )}
       {imagePreview && (
         <Button
@@ -77,5 +76,13 @@ const ImageUploader = ({
     </div>
   );
 };
+
+
+ImageUploader.propTypes = {
+  getImagePreview: PropTypes.func.isRequired,
+  initialImagePreview: PropTypes.any,
+};
+
+
 
 export default ImageUploader;

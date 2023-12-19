@@ -4,7 +4,7 @@ import * as React from "react";
 import TextField from "@mui/material/TextField";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
-import "./datetimepicker.scss";
+import "./DatetimePicker.scss";
 import dayjs from "dayjs";
 import PropTypes from 'prop-types';
 
@@ -113,8 +113,8 @@ const DatetimePicker = ({
 
 
 DatetimePicker.propTypes = {
-  passStartDate: PropTypes.func.isRequired,
-  passEndDate: PropTypes.func.isRequired,
+  passStartDate: PropTypes.func,
+  passEndDate: PropTypes.func,
   initialStartDate: PropTypes.any,
   initialEndDate: PropTypes.any,
 };

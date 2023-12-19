@@ -1,8 +1,10 @@
 import Banner from "../../Components/Banner/Banner";
-import Topbar from "../../Components/Topbar/Topbar";
-import Mysidebar from "../../Components/Mysidebar/Mysidebar";
+import TopBar from "../../Components/TopBar/TopBar";
+import MySideBar from "../../Components/MySideBar/MySideBar";
 import './view.css';
 import { Box } from "@mui/material";
+import PropTypes from 'prop-types';
+
 
 function View({ children }) {
     return (
@@ -12,11 +14,11 @@ function View({ children }) {
             </div>
             <div className="view-container">
                 <div className="view-sidebar">
-                <Mysidebar />
+                <MySideBar />
                     
                 </div>
                 <Box className="view-content">
-                    <Topbar className="view-top-bar" />
+                    <TopBar className="view-top-bar" />
                     <div className="main-content">
                     {children}
 
@@ -26,5 +28,10 @@ function View({ children }) {
         </div>
     );
 }
+
+
+View.propTypes = {
+    children: PropTypes.any.isRequired
+  };
 
 export default View;

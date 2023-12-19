@@ -4,16 +4,16 @@ import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined
 import { Link } from "react-router-dom";
 import { Dialog } from "primereact/dialog";
 import { Button } from "primereact/button";
-import "./topbar.scss";
+import "./TopBar.scss";
 import storage from "../../firebase/config";
 import { ref, uploadBytes } from "firebase/storage";
 import buildAPI from "../../const/buildAPI";
 import AlertDialog from "../AlertDialog/AlertDialog";
 
-const Topbar = () => {
+const TopBar = () => {
   const [dialog, setDialog] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
-  const [img, setimg] = useState("");
+  const [img, setImg] = useState("");
   const [isLogoutFormOpen, setIsLogoutFormOpen] = useState(false);
 
   const handleLogoutFormClose = () => {
@@ -119,7 +119,7 @@ const Topbar = () => {
           onHide={() => setDialog(false)}
         >
           <div className="dialog-components">
-            <input type="file" onChange={(e) => setimg(e.target.files[0])} />
+            <input type="file" onChange={(e) => setImg(e.target.files[0])} />
             <Button
               label="Save"
               onClick={saveImage}
@@ -132,4 +132,4 @@ const Topbar = () => {
   );
 };
 
-export default Topbar;
+export default TopBar;

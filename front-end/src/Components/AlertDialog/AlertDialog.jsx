@@ -6,6 +6,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
+import PropTypes from "prop-types";
 import { Box, Typography } from "@mui/material";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -58,9 +59,13 @@ export default function AlertDialog({
       </DialogContent>
 
       <DialogActions>
-        <Button className="cancel-btn" onClick={handleCloseClick}  sx={{
-            fontSize:"1rem"
-          }}>
+        <Button
+          className="cancel-btn"
+          onClick={handleCloseClick}
+          sx={{
+            fontSize: "1rem",
+          }}
+        >
           {cancelText}
         </Button>
         <Button
@@ -69,7 +74,7 @@ export default function AlertDialog({
           variant="contained"
           onClick={handleAcceptClick}
           sx={{
-            fontSize:"1rem"
+            fontSize: "1rem",
           }}
         >
           {acceptText}
@@ -78,3 +83,12 @@ export default function AlertDialog({
     </Dialog>
   );
 }
+
+AlertDialog.propTypes = {
+  title: PropTypes.any,
+  description: PropTypes.any,
+  acceptText: PropTypes.any,
+  cancelText: PropTypes.any,
+  handleClose: PropTypes.func.isRequired,
+  handleAccept: PropTypes.func.isRequired,
+};

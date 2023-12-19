@@ -2,7 +2,6 @@ import {
   Box,
   Typography,
   TextField,
-  // Button,
   Dialog,
   DialogActions,
   DialogContent,
@@ -26,6 +25,7 @@ import ImageUploader from "../ImageUploader/ImageUploader";
 import imageStorage from "../../firebase/config";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { v4 } from "uuid";
+import PropTypes from "prop-types";
 
 const defaultState = {
   campaignId: "",
@@ -780,5 +780,11 @@ const checkoutSchema = yup.object({
     .max(500, "Name is not more than 200 characters"),
   finalURL: yup.string().required("Final url is required"),
 });
+
+CampaignDialog.propTypes = {
+  title: PropTypes.string.isRequired,
+  onClose: PropTypes.func.isRequired,
+  initialState: PropTypes.any,
+};
 
 export default CampaignDialog;

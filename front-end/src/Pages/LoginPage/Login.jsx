@@ -29,6 +29,7 @@ export default function Login() {
   const handleOnClickLogin = (e) => {
     let flag = true;
     const regex = new RegExp(
+      // eslint-disable-next-line no-useless-escape
       /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
     );
     if (regex.test(email)) setMessageEmail("");
@@ -59,14 +60,7 @@ export default function Login() {
           }
         })
         .catch(function (error) {
-          console.log(error, "error");
-          if (error.response && error.response.status === 404) {
-            // const notify = () =>
-            toast.error("Invalid username or password. Please try again.", {});
-            // alert("Invalid username or password. Please try again.");
-          } else {
-            toast.error("Invalid username or password. Please try again.", {});
-          }
+          toast.error("Invalid username or password. Please try again.", {});
         })
         .finally(() => {
           setButtonDisabled(false);
