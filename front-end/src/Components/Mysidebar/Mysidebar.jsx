@@ -50,25 +50,24 @@ const MySideBar = () => {
     }
   }, [isSmallScreen]);
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = await buildAPI.get("/api/account/get_user_info");
-        setUserName(response.data.name);
-        const imageRef = ref(storage, `files/${userName}/avatar`);
-        getDownloadURL(imageRef)
-          .then((image) => {
-            setAvatar(image);
-          })
-          .catch((error) => {
-            console.log("Error getting download URL: ", error.message);
-          });
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-    };
-    fetchUserData();
-  }, [userName]);
+    useEffect(() => {
+        const fetchUserData = async () => {
+            try {
+                const response = await buildAPI.get("/api/account/get_user_info");
+                setUserName(response.data.name);
+                const email = response.data.email;
+                const imageRef = ref(storage, `files/${email}/avatar`);
+                getDownloadURL(imageRef).then((image) => {
+                    setAvatar(image)
+                }).catch((error) => {
+                    console.log('Error getting download URL: ', error.message);
+                });
+            } catch (error) {
+                console.error("Error fetching user data:", error);
+            }
+        };
+        fetchUserData();
+    }, [userName]);
 
   return (
     <Sidebar

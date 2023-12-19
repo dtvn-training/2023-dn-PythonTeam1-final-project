@@ -9,6 +9,7 @@ import storage from "../../firebase/config";
 import { ref, uploadBytes } from "firebase/storage";
 import buildAPI from "../../const/buildAPI";
 import AlertDialog from "../AlertDialog/AlertDialog";
+import { toast } from 'react-toastify';
 
 const TopBar = () => {
   const [dialog, setDialog] = useState(false);
@@ -41,15 +42,19 @@ const TopBar = () => {
   const handleLogout = () => {
     setIsLogoutFormOpen(true);
   };
-  const saveImage = async () => {
-    try {
-      const response = await buildAPI.get("/api/account/get_user_info");
-      const name = response.data.name;
-      const imageRef = ref(storage, `files/${name}/avatar`);
-      await uploadBytes(imageRef, img);
-    } catch (error) {}
-    setDialog(false);
-  };
+    const saveImage = async () => {
+        try {
+            const response = await buildAPI.get("/api/account/get_user_info");
+            const email = response.data.email;
+            const imageRef = ref(storage, `files/${email}/avatar`);
+            await uploadBytes(imageRef, img);
+            toast.success('Upload successful')
+        } catch (error) {
+            toast.error('Upload error');
+            console.log(error)
+        }
+        setDialog(false)
+    };
 
   return (
     <>
@@ -119,7 +124,7 @@ const TopBar = () => {
           onHide={() => setDialog(false)}
         >
           <div className="dialog-components">
-            <input type="file" onChange={(e) => setImg(e.target.files[0])} />
+            <input aria-label='' type="file" onChange={(e) => setImg(e.target.files[0])} />
             <Button
               label="Save"
               onClick={saveImage}
