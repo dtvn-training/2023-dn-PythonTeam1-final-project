@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { CSVLink } from 'react-csv';
-import { Box } from '@mui/material'
+import { Box, Pagination, PaginationItem } from '@mui/material'
 import Search from "../../Components/Search/Search";
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, gridPageCountSelector, gridPageSelector, useGridApiContext, useGridSelector } from '@mui/x-data-grid';
 import AccountForm from "../../Components/AccountForm/AccountForm";
 import buildAPI from "../../const/buildAPI"
 import { toast } from 'react-toastify';
@@ -300,12 +300,34 @@ const Account = () => {
                                 },
                             },
                         }}
+                        slots={{
+                            pagination: CustomPagination,
+                        }}
                         disableRowSelectionOnClick
+                        disableColumnMenu
                     />
                 </StyledBox>
             </Table>
         </MainContainer >
     );
 };
+
+function CustomPagination() {
+    const apiRef = useGridApiContext();
+    const page = useGridSelector(apiRef, gridPageSelector);
+    const pageCount = useGridSelector(apiRef, gridPageCountSelector);
+
+    return (
+        <Pagination
+            color="primary"
+            variant="outlined"
+            shape="rounded"
+            page={page + 1}
+            count={pageCount}
+            renderItem={(props2) => <PaginationItem {...props2} disableRipple />}
+            onChange={(event, value) => apiRef.current.setPage(value - 1)}
+        />
+    );
+}
 
 export default Account;

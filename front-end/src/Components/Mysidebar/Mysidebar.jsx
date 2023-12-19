@@ -40,7 +40,8 @@ const Mysidebar = () => {
             try {
                 const response = await buildAPI.get("/api/account/get_user_info");
                 setUserName(response.data.name);
-                const imageRef = ref(storage, `files/${userName}/avatar`);
+                const email = response.data.email;
+                const imageRef = ref(storage, `files/${email}/avatar`);
                 getDownloadURL(imageRef).then((image) => {
                     setavatar(image)
                 }).catch((error) => {

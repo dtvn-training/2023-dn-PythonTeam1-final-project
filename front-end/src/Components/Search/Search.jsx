@@ -27,6 +27,7 @@ const Search = ({ data, onSearch }) => {
             display="flex"
         >
             <input
+                className='input'
                 type="text"
                 placeholder="Search..."
                 value={query}
