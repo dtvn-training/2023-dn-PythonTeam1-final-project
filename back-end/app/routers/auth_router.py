@@ -9,7 +9,7 @@ from ..controllers import auth_controller as auth
 
 router = APIRouter(
     prefix="/auth",
-    tags=['Authencation']
+    tags=['Authentication']
 )
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
@@ -21,35 +21,35 @@ async def login(user_credentials: user_schemas.UserLogin, db: Session = Depends(
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail={"error": "Invalid username", "msg": "Invalid credentials"}
+            detail={"error": "Invalid email or password",
+                    "msg": "Invalid credentials"}
         )
 
     if not auth.verify(user_credentials.password, user.password):
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail={"error": "Invalid password", "msg": "Invalid credentials"}
+            detail={"error": "Invalid email or password",
+                    "msg": "Invalid credentials"}
         )
 
     access_token = auth.create_access_token(
-        data={"user_id": user.id})
+        data={"user_id": user.user_id})
 
-    return {"access_token": access_token, "token_type": "bearer"}
+    return {"msg": "Login successfully", "access_token": access_token, "token_type": "bearer"}
 
 
-@router.post("/user")
-async def get_user_by_token(token: str | None = None, db: Session = Depends(get_db)):
-    user_data = auth.get_current_user(token, db)
-    if not user_data:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail={"error": "Invalid Token", "msg": "No token in database"})
-    return user_schemas.UserInfo(user_data.email)
+@router.get("/user")
+async def get_user_by_token(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+    user_full_data = auth.get_current_user(token, db)
+    user_data_response = user_schemas.UserInfo(user_full_data.email)
+    return {"msg": "User found", "data": user_data_response}
 
 
 @router.get("/checkTokenExpired")
-async def is_token_expired(token: str = Depends(oauth2_scheme)):
+async def is_token_expired(token: Annotated[str | None, Depends(oauth2_scheme)]):
     if auth.is_token_expired(token):
         return {
-            "msg": "Access token available"
+            "msg": "Access token is available"
         }
     else:
         return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
