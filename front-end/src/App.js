@@ -3,6 +3,8 @@ import React, { useEffect, Suspense, lazy } from 'react';
 import './App.css';
 import Campaign from './Pages/Campaign/Campaign.jsx';
 import Account from './Pages/Account/Account.jsx';
+import Dashboard from './Pages/DashBoard/DashBoard'
+
 import { useSelector, useDispatch } from "react-redux";
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { validateToken } from './redux/actions/authAction';
@@ -35,6 +37,16 @@ function App() {
           />
           <Route
             path="/"
+            element={
+              isLogged ?
+                <View>
+                  <Dashboard />
+                </View>
+                : <Navigate to="/login" />
+            }
+          />
+          <Route
+            path="/campaign"
             element={
               isLogged ?
                 <View>

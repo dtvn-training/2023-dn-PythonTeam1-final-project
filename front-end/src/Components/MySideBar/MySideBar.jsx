@@ -5,6 +5,8 @@ import { Link, useLocation } from "react-router-dom";
 import ViewSidebarOutlinedIcon from "@mui/icons-material/ViewSidebarOutlined";
 import CampaignOutlinedIcon from "@mui/icons-material/CampaignOutlined";
 import SupervisorAccountOutlinedIcon from "@mui/icons-material/SupervisorAccountOutlined";
+import DashboardCustomizeOutlinedIcon from "@mui/icons-material/DashboardCustomizeOutlined";
+
 import "./MySideBar.scss";
 import buildAPI from "../../const/buildAPI";
 import storage from "../../firebase/config";
@@ -118,17 +120,17 @@ const MySideBar = () => {
 
         {/* MENU ITEM LINK */}
         <Box>
-          {/* <Item
+          <Item
                         title="Dashboard"
                         to="/"
                         icon={<DashboardCustomizeOutlinedIcon style={{ fontSize: '2.6rem' }} />}
                         selected={selected}
                         setSelected={setSelected}
-                    /> */}
+                    />
 
           <Item
             title={!isCollapsed ? "Campaign" : ""}
-            to="/"
+            to="/campaign"
             icon={<CampaignOutlinedIcon style={{ fontSize: "2.6rem" }} />}
             selected={selected}
             setSelected={setSelected}
