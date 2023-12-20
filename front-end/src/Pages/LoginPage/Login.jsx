@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react";
-import "./Login.scss";
-import axios from "axios";
+import React, { useState } from "react";
+
+import buildAPI from "../../const/buildAPI";
 import { useNavigate } from "react-router-dom";
-import { setToken, validateToken } from "../../services/AuthService";
 import { useDispatch } from "react-redux";
-import { dispatchLogin, dispatchLogout } from "../../redux/actions/authAction";
+import { setToken } from "../../services/AuthService";
+import "./Login.scss";
+import { dispatchLogin } from "../../redux/actions/authAction";
+import { toast } from "react-toastify";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -12,8 +14,10 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [messageEmail, setMessageEmail] = useState("");
   const [messagePassword, setMessagePassword] = useState("");
+  const [buttonDisabled, setButtonDisabled] = useState(false);
 
   const dispatch = useDispatch();
+
   const handleEmailOnChange = (e) => {
     setEmail(e.target.value);
   };
@@ -25,6 +29,7 @@ export default function Login() {
   const handleOnClickLogin = (e) => {
     let flag = true;
     const regex = new RegExp(
+      // eslint-disable-next-line no-useless-escape
       /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
     );
     if (regex.test(email)) setMessageEmail("");
@@ -39,8 +44,9 @@ export default function Login() {
     } else setMessagePassword("");
 
     if (flag) {
-      axios
-        .post("http://127.0.0.1:8000/auth/login", {
+      setButtonDisabled(true);
+      buildAPI
+        .post("/auth/login", {
           email: email,
           password: password,
         })
@@ -48,18 +54,16 @@ export default function Login() {
           if (response.data.access_token) {
             dispatch(dispatchLogin());
 
-            // console.log(dispatchLogin);
+            toast.success("Login successfully.");
             setToken(response.data.access_token);
             navigate("/");
           }
         })
         .catch(function (error) {
-          console.log(error, "error");
-          if (error.response && error.response.status === 404) {
-            alert("Invalid username or password. Please try again.");
-          } else {
-            alert("Login failed. Please try again.");
-          }
+          toast.error("Invalid username or password. Please try again.", {});
+        })
+        .finally(() => {
+          setButtonDisabled(false);
         });
     }
   };
@@ -98,7 +102,11 @@ export default function Login() {
         )}
       </div>
 
-      <button className="login-btn" onClick={handleOnClickLogin}>
+      <button
+        className="login-btn"
+        onClick={handleOnClickLogin}
+        disabled={buttonDisabled}
+      >
         Login
       </button>
 

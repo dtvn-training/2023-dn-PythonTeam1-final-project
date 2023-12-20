@@ -1,0 +1,40 @@
+.datetime-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: auto;
+  justify-content: space-between;
+}
+
+.datetime-component {
+  display: flex;
+  align-items: center;
+  width: 30rem;
+}
+
+.datetime-component .date-range {
+  margin-right: 0.5em;
+}
+
+.customDatePicker {
+  width: 20rem;
+
+  & input {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 850px) {
+  .datetime-container {
+    grid-template-columns: repeat(1, 1fr);
+  }
+  .datetime-component {
+    display: flex;
+    margin-bottom: 2rem;
+    width: 30rem;
+  }
+  .datetime-component .date-range {
+    margin-right: 0.5em;
+    width: 30%;
+  }
+
+}

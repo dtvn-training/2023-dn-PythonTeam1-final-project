@@ -1,38 +1,67 @@
+import Login from './Pages/LoginPage/Login';
+import React, { useEffect, Suspense, lazy } from 'react';
 import './App.css';
+import Campaign from './Pages/Campaign/Campaign.jsx';
+import Account from './Pages/Account/Account.jsx';
+import Dashboard from './Pages/DashBoard/DashBoard'
+
 import { useSelector, useDispatch } from "react-redux";
-import DashBoard from './Components/DashBoard/DashBoard'
-// import { validateToken } from './services/AuthService'
-import Login from "./Pages/LoginPage/Login";
-import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { validateToken } from './redux/actions/authAction';
+import Loading from './Components/Loading/Loading.jsx';
+
+
+
+const View = lazy(() => import('./Pages/View/View'));
+
+
 
 function App() {
-  const token = useSelector((state) => state.token);
   const isLogged = useSelector((state) => state.auth.isLogged);
   const dispatch = useDispatch()
 
   useEffect(() => {
     dispatch(validateToken())
   }, [])
-
   return (
-
-    <BrowserRouter>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            isLogged ? <DashBoard /> : <Navigate to="/login" />
+    <Suspense fallback={<Loading />}>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/account" element={
+            isLogged ?
+              <View>
+                <Account />
+              </View>
+              : <Navigate to="/login" />
           }
-        />
-        <Route path="/login"
-          element={
-            isLogged ? <Navigate to="/" /> : <Login />
-          } />
-
-      </Routes>
-    </BrowserRouter>
+          />
+          <Route
+            path="/"
+            element={
+              isLogged ?
+                <View>
+                  <Dashboard />
+                </View>
+                : <Navigate to="/login" />
+            }
+          />
+          <Route
+            path="/campaign"
+            element={
+              isLogged ?
+                <View>
+                  <Campaign />
+                </View>
+                : <Navigate to="/login" />
+            }
+          />
+          <Route path="/login"
+            element={
+              isLogged ? <Navigate to="/" /> : <Login />
+            } />
+        </Routes>
+      </BrowserRouter>
+    </Suspense>
   );
 }
 
