@@ -1,7 +1,14 @@
+.slider {
+    height: 150px;
+    display: flex;
+    justify-content: center;
+}
+
 .banner {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 14rem;
+    height: 150px;
     background: #fff;
+    object-fit: cover;
 }
