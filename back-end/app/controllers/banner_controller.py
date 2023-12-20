@@ -10,8 +10,8 @@ def get_banner(token: str, db: Session):
 
     if user is None:
         raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="User not found")
+            status_code=status.HTTP_403_FORBIDDEN, detail="User not found"
+        )
 
     first_status = True
     second_status = True
@@ -20,7 +20,10 @@ def get_banner(token: str, db: Session):
         try:
             banners = (
                 db.query(campaign_model.Campaign)
-                .filter(campaign_model.Campaign.status == True)
+                .filter(
+                    campaign_model.Campaign.status == True,
+                    campaign_model.Campaign.delete_flag == False,
+                )
                 .order_by(campaign_model.Campaign.bid_amount.desc())
                 .limit(2)
                 .all()
@@ -28,8 +31,7 @@ def get_banner(token: str, db: Session):
 
             if len(banners) != 2:
                 raise HTTPException(
-                    status_code=status.HTTP_404_NOT_FOUND,
-                    detail="Find not found"
+                    status_code=status.HTTP_404_NOT_FOUND, detail="Find not found"
                 )
 
             first_campaign, second_campaign = [
@@ -38,15 +40,23 @@ def get_banner(token: str, db: Session):
                     "bid_amount": banner.bid_amount,
                     "budget": banner.budget,
                     "end_date": banner.end_date,
-                    "used_amount": banner.used_amount
+                    "used_amount": banner.used_amount,
                 }
-                for banner in banners]
+                for banner in banners
+            ]
 
             creatives = (
                 db.query(creative_model.Creative)
                 .filter(
-                    (creative_model.Creative.campaign_id == first_campaign["campaign_id"]) |
-                    (creative_model.Creative.campaign_id == second_campaign["campaign_id"]))
+                    (
+                        creative_model.Creative.campaign_id
+                        == first_campaign["campaign_id"]
+                    )
+                    | (
+                        creative_model.Creative.campaign_id
+                        == second_campaign["campaign_id"]
+                    )
+                )
                 .all()
             )
 
@@ -55,53 +65,60 @@ def get_banner(token: str, db: Session):
                     {
                         "campaign_id": creative.campaign_id,
                         "url": creative.url,
-                        "img_preview": creative.img_preview
+                        "img_preview": creative.img_preview,
                     }
                     for creative in creatives
                 ]
             else:
                 raise HTTPException(
-                    status_code=status.HTTP_404_NOT_FOUND,
-                    detail="Find not found"
+                    status_code=status.HTTP_404_NOT_FOUND, detail="Find not found"
                 )
 
-            first_used_amount = first_campaign["used_amount"] + \
-                first_campaign["bid_amount"]
-            first_usage_rate = (
-                first_campaign["bid_amount"] / first_campaign["budget"]) * 100
-            first_remain = first_campaign["budget"] - \
-                first_campaign["used_amount"]
+            first_used_amount = (
+                first_campaign["used_amount"] + first_campaign["bid_amount"]
+            )
+            first_usage_rate = (first_used_amount / first_campaign["budget"]) * 100
+            first_remain = first_campaign["budget"] - first_campaign["used_amount"]
 
-            if first_campaign["end_date"] == datetime.datetime.now().strftime(
-                    "%Y-%m-%d %H:%M:%S") or first_remain < first_campaign["bid_amount"]:
+            if (
+                first_campaign["end_date"]
+                == datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                or first_remain < first_campaign["bid_amount"]
+            ):
                 first_status = False
 
-            second_used_amount = second_campaign["used_amount"] + \
-                second_campaign["bid_amount"]
+            second_used_amount = (
+                second_campaign["used_amount"] + second_campaign["bid_amount"]
+            )
             second_usage_rate = (
-                second_campaign["bid_amount"] / second_campaign["budget"]) * 100
-            second_remain = second_campaign["budget"] - \
-                second_campaign["used_amount"]
+                second_campaign["bid_amount"] / second_campaign["budget"]
+            ) * 100
+            second_remain = second_campaign["budget"] - second_campaign["used_amount"]
 
-            if second_campaign["end_date"] == datetime.datetime.now().strftime(
-                    "%Y-%m-%d %H:%M:%S") or second_remain < second_campaign["bid_amount"]:
+            if (
+                second_campaign["end_date"]
+                == datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                or second_remain < second_campaign["bid_amount"]
+            ):
                 second_status = False
 
             db.query(campaign_model.Campaign).filter_by(
-                campaign_id=first_campaign["campaign_id"]).update(
+                campaign_id=first_campaign["campaign_id"]
+            ).update(
                 {
                     "used_amount": first_used_amount,
                     "usage_rate": first_usage_rate,
-                    "status": first_status
+                    "status": first_status,
                 }
             )
 
             db.query(campaign_model.Campaign).filter_by(
-                campaign_id=second_campaign["campaign_id"]).update(
+                campaign_id=second_campaign["campaign_id"]
+            ).update(
                 {
                     "used_amount": second_used_amount,
                     "usage_rate": second_usage_rate,
-                    "status": second_status
+                    "status": second_status,
                 }
             )
 
@@ -109,8 +126,7 @@ def get_banner(token: str, db: Session):
 
         except HTTPException:
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail='Find not found'
+                status_code=status.HTTP_404_NOT_FOUND, detail="Find not found"
             )
 
         return result
