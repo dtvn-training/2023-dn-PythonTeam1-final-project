@@ -26,6 +26,7 @@ import imageStorage from "../../firebase/config";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { v4 } from "uuid";
 import PropTypes from "prop-types";
+import FieldLabel from "./FieldLabel";
 
 const defaultState = {
   campaignId: "",
@@ -275,16 +276,7 @@ const CampaignDialog = ({ title, onClose, initialState = defaultState }) => {
                         gridTemplateColumns="1fr 3fr"
                         alignItems="center"
                       >
-                        <Typography
-                          variant="h5"
-                          fontWeight={700}
-                          sx={{
-                            textAlign: "right",
-                            paddingRight: "3rem",
-                          }}
-                        >
-                          Name:
-                        </Typography>
+                        <FieldLabel>Name:</FieldLabel>
                         <TextField
                           fullWidth
                           variant="filled"
@@ -319,16 +311,7 @@ const CampaignDialog = ({ title, onClose, initialState = defaultState }) => {
                         alignItems="center"
                         mt={2}
                       >
-                        <Typography
-                          variant="h5"
-                          fontWeight={700}
-                          sx={{
-                            textAlign: "right",
-                            paddingRight: "3rem",
-                          }}
-                        >
-                          User status:
-                        </Typography>
+                        <FieldLabel>User status:</FieldLabel>
                         <TextField
                           select
                           onBlur={handleBlur}
@@ -383,16 +366,7 @@ const CampaignDialog = ({ title, onClose, initialState = defaultState }) => {
                         gridTemplateColumns="1fr 4fr"
                         alignItems="center"
                       >
-                        <Typography
-                          variant="h5"
-                          fontWeight={700}
-                          sx={{
-                            textAlign: "right",
-                            paddingRight: "3rem",
-                          }}
-                        >
-                          Schedule:
-                        </Typography>
+                        <FieldLabel>Schedule:</FieldLabel>
                         <DatetimePicker
                           onBlur={handleBlur}
                           onChange={handleChange}
@@ -436,16 +410,7 @@ const CampaignDialog = ({ title, onClose, initialState = defaultState }) => {
                         gridTemplateColumns="1fr 3fr"
                         alignItems="center"
                       >
-                        <Typography
-                          variant="h5"
-                          fontWeight={700}
-                          sx={{
-                            textAlign: "right",
-                            paddingRight: "3rem",
-                          }}
-                        >
-                          Budget:
-                        </Typography>
+                        <FieldLabel>Budget:</FieldLabel>
                         <TextField
                           fullWidth
                           variant="filled"
@@ -499,16 +464,7 @@ const CampaignDialog = ({ title, onClose, initialState = defaultState }) => {
                         gridTemplateColumns="1fr 3fr"
                         alignItems="center"
                       >
-                        <Typography
-                          variant="h5"
-                          fontWeight={700}
-                          sx={{
-                            textAlign: "right",
-                            paddingRight: "3rem",
-                          }}
-                        >
-                          Bid Amount:
-                        </Typography>
+                        <FieldLabel>Bid Amount:</FieldLabel>
                         <TextField
                           fullWidth
                           variant="filled"
@@ -563,16 +519,7 @@ const CampaignDialog = ({ title, onClose, initialState = defaultState }) => {
                         gridTemplateColumns="1fr 3fr"
                         alignItems="center"
                       >
-                        <Typography
-                          variant="h5"
-                          fontWeight={700}
-                          sx={{
-                            textAlign: "right",
-                            paddingRight: "3rem",
-                          }}
-                        >
-                          Title:
-                        </Typography>
+                        <FieldLabel>Title:</FieldLabel>
                         <TextField
                           fullWidth
                           variant="filled"
@@ -606,16 +553,7 @@ const CampaignDialog = ({ title, onClose, initialState = defaultState }) => {
                         gridTemplateColumns="1fr 3fr"
                         alignItems="center"
                       >
-                        <Typography
-                          variant="h5"
-                          fontWeight={700}
-                          sx={{
-                            textAlign: "right",
-                            paddingRight: "3rem",
-                          }}
-                        >
-                          Description:
-                        </Typography>
+                        <FieldLabel>Description:</FieldLabel>
                         <TextField
                           fullWidth
                           variant="filled"
@@ -649,16 +587,7 @@ const CampaignDialog = ({ title, onClose, initialState = defaultState }) => {
                         gridTemplateColumns="1fr 3fr"
                         alignItems="center"
                       >
-                        <Typography
-                          variant="h5"
-                          fontWeight={700}
-                          sx={{
-                            textAlign: "right",
-                            paddingRight: "3rem",
-                          }}
-                        >
-                          Creative Preview:
-                        </Typography>
+                        <FieldLabel>Creative Preview:</FieldLabel>
                         <ImageUploader
                           getImagePreview={setImageUrl}
                           initialImagePreview={initialState.creativePreview}
@@ -673,16 +602,7 @@ const CampaignDialog = ({ title, onClose, initialState = defaultState }) => {
                         gridTemplateColumns="1fr 3fr"
                         alignItems="center"
                       >
-                        <Typography
-                          variant="h5"
-                          fontWeight={700}
-                          sx={{
-                            textAlign: "right",
-                            paddingRight: "3rem",
-                          }}
-                        >
-                          Final URL:
-                        </Typography>
+                        <FieldLabel>Final URL:</FieldLabel>
                         <TextField
                           fullWidth
                           variant="filled"

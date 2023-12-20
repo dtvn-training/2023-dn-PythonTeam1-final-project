@@ -48,12 +48,10 @@ export default function AlertDialog({
       <DialogContent dividers={true}>
         <DialogContentText id="alert-dialog-slide-description">
           <Box>
-            <Typography variant="h5" fontWeight={700} color="black">
+            <Typography variant="h5" fontWeight={700} color="black" marginBottom={"10em"}>
               {description}
             </Typography>
-            <br />
-            <br />
-            <br />
+            
           </Box>
         </DialogContentText>
       </DialogContent>
